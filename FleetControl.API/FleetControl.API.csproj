@@ -12,6 +12,13 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="ExceptionsHandler\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FleetControl.Application\FleetControl.Application.csproj" />
+    <ProjectReference Include="..\FleetControl.Core\FleetControl.Core.csproj" />
+    <ProjectReference Include="..\FleetControl.Infrastructure\FleetControl.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

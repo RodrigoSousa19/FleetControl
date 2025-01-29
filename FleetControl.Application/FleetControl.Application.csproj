@@ -6,4 +6,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Commands\" />
+    <Folder Include="Models\" />
+    <Folder Include="Queries\" />
+    <Folder Include="Services\Interfaces\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FleetControl.Core\FleetControl.Core.csproj" />
+    <ProjectReference Include="..\FleetControl.Infrastructure\FleetControl.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

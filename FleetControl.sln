@@ -5,6 +5,12 @@ VisualStudioVersion = 17.13.35617.110 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetControl.API", "FleetControl.API\FleetControl.API.csproj", "{BEEBC0A9-8166-4DB7-8170-AF0CE6C56181}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetControl.Core", "FleetControl.Core\FleetControl.Core.csproj", "{A1F26745-FF4F-40A5-9184-DF46958492D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetControl.Application", "FleetControl.Application\FleetControl.Application.csproj", "{94298B11-085F-4829-9F40-EFC863544187}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetControl.Infrastructure", "FleetControl.Infrastructure\FleetControl.Infrastructure.csproj", "{C12F0DD7-F06B-4BFD-8DC6-1B7012DBE10C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +21,18 @@ Global
 		{BEEBC0A9-8166-4DB7-8170-AF0CE6C56181}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEEBC0A9-8166-4DB7-8170-AF0CE6C56181}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEEBC0A9-8166-4DB7-8170-AF0CE6C56181}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1F26745-FF4F-40A5-9184-DF46958492D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1F26745-FF4F-40A5-9184-DF46958492D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1F26745-FF4F-40A5-9184-DF46958492D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1F26745-FF4F-40A5-9184-DF46958492D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94298B11-085F-4829-9F40-EFC863544187}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94298B11-085F-4829-9F40-EFC863544187}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94298B11-085F-4829-9F40-EFC863544187}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94298B11-085F-4829-9F40-EFC863544187}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C12F0DD7-F06B-4BFD-8DC6-1B7012DBE10C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C12F0DD7-F06B-4BFD-8DC6-1B7012DBE10C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C12F0DD7-F06B-4BFD-8DC6-1B7012DBE10C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C12F0DD7-F06B-4BFD-8DC6-1B7012DBE10C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
