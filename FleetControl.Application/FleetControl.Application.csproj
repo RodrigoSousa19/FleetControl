@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Commands\Customers\" />
+    <Folder Include="Commands\Drivers\" />
+    <Folder Include="Commands\Vehicles\" />
+    <Folder Include="Commands\Reservations\" />
     <Folder Include="Commands\Users\" />
     <Folder Include="Queries\" />
   </ItemGroup>
