@@ -1,5 +1,5 @@
-using FleetControl.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
+using FleetControl.Application;
+using FleetControl.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +10,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration.GetConnectionString("FleetControl");
-builder.Services.AddDbContext<FleetControlDbContext>(o => o.UseSqlServer(connectionString));
+builder.Services
+    .AddApplication()
+    .AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 

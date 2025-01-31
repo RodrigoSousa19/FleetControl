@@ -2,7 +2,7 @@
 {
     public class Driver : BaseEntity
     {
-        public Driver(int idUser,string documentNumber,string documentType)
+        public Driver(int idUser, string documentNumber, string documentType)
         {
             IdUser = idUser;
             DocumentNumber = documentNumber;

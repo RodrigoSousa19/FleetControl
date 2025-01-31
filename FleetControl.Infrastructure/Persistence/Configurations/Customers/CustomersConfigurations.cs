@@ -1,6 +1,5 @@
 ﻿using FleetControl.Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FleetControl.Infrastructure.Persistence.Configurations.Customers

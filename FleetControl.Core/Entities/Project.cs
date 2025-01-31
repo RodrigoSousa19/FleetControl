@@ -14,7 +14,7 @@
         public CostCenter CostCenter { get; set; }
         public int IdCustomer { get; private set; }
         public Customer Customer { get; set; }
-        
+
         public void Update(string nome, int idCostCenter, int idCustomer)
         {
             Nome = nome;
