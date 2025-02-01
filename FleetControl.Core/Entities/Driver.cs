@@ -16,9 +16,8 @@
         public string DocumentType { get; private set; }
         public ICollection<DriverProjects> DriverProjects { get; set; }
 
-        public void Update(int idUser, string documentNumber, string documentType)
+        public void Update(string documentNumber, string documentType)
         {
-            IdUser = idUser;
             DocumentNumber = documentNumber;
             DocumentType = documentType;
         }
