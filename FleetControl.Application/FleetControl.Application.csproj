@@ -7,7 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\Vehicles\" />
+    <Folder Include="Commands\Vehicles\SetVehicleAvailable\" />
+    <Folder Include="Commands\Vehicles\SendVehicleToMaintenance\" />
+    <Folder Include="Commands\Vehicles\SetVehicleReserved\" />
+    <Folder Include="Commands\Vehicles\VehicleMaintenance\InsertMaintenance\" />
+    <Folder Include="Commands\Vehicles\VehicleMaintenance\CancelMaintenance\" />
+    <Folder Include="Commands\Vehicles\VehicleMaintenance\CompleteMaintenance\" />
+    <Folder Include="Commands\Vehicles\VehicleMaintenance\FinishMaintenance\" />
+    <Folder Include="Commands\Vehicles\VehicleMaintenance\StartMaintenance\" />
+    <Folder Include="Commands\Vehicles\VehicleMaintenance\UpdateMaintenance\" />
     <Folder Include="Queries\" />
   </ItemGroup>
 
