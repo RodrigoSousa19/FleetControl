@@ -1,5 +1,4 @@
-﻿using FleetControl.Application.Commands.CostCenters.EnableCostCenter;
-using FleetControl.Application.Models;
+﻿using FleetControl.Application.Models;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
 using MediatR;
