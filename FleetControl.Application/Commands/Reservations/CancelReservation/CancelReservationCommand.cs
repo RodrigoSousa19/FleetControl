@@ -1,5 +1,4 @@
-﻿using FleetControl.Application.Commands.Reservations.ConfirmReservation;
-using FleetControl.Application.Models;
+﻿using FleetControl.Application.Models;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Reservations.CancelReservation
