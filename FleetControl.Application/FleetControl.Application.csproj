@@ -7,7 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Queries\" />
+    <Folder Include="Queries\CostCenters\GetById\" />
+    <Folder Include="Queries\Customers\GetById\" />
+    <Folder Include="Queries\Drivers\GetById\" />
+    <Folder Include="Queries\Projects\GetById\" />
+    <Folder Include="Queries\Reservations\GetById\" />
+    <Folder Include="Queries\Users\GetById\" />
+    <Folder Include="Queries\Vehicles\GetById\" />
+    <Folder Include="Queries\Vehicles\VehicleMaintenance\GetById\" />
   </ItemGroup>
 
   <ItemGroup>
