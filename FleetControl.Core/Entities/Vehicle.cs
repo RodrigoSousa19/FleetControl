@@ -64,7 +64,9 @@ namespace FleetControl.Core.Entities
         public void SetAvailable()
         {
             Status = VehicleStatus.Available;
-            IdProject = null;
+
+            if (IdProject is not null)
+                IdProject = null;
         }
     }
 }
