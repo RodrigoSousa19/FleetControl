@@ -5,7 +5,7 @@ using MediatR;
 
 namespace FleetControl.Application.Commands.Customers.InsertCustomer
 {
-    public class InsertCustomerHandler : IRequestHandler<InsertCustomerCommand, ResultViewModel>
+    public class InsertCustomerHandler : IRequestHandler<InsertCustomerCommand, ResultViewModel<Customer>>
     {
         private readonly IGenericRepository<Customer> _repository;
 
@@ -14,7 +14,7 @@ namespace FleetControl.Application.Commands.Customers.InsertCustomer
             _repository = repository;
         }
 
-        public async Task<ResultViewModel> Handle(InsertCustomerCommand request, CancellationToken cancellationToken)
+        public async Task<ResultViewModel<Customer>> Handle(InsertCustomerCommand request, CancellationToken cancellationToken)
         {
             var customer = await _repository.Create(request.ToEntity());
 
