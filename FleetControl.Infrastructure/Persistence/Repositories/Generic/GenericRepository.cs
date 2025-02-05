@@ -25,7 +25,7 @@ namespace FleetControl.Infrastructure.Persistence.Repositories.Generic
 
         public async Task<bool> Exists(int id)
         {
-            return await _dataSet.AnyAsync(g => g.Equals(id));
+            return await _dataSet.AnyAsync(g => g.Equals(id) && !g.IsDeleted);
         }
 
         public async Task<List<T>> GetAll(bool includeNavigation = false, bool recursiveSearch = false)
@@ -37,7 +37,7 @@ namespace FleetControl.Infrastructure.Persistence.Repositories.Generic
                 ApplyIncludes(query, recursiveSearch);
             }
 
-            return await query.ToListAsync();
+            return await query.Where(x => !x.IsDeleted).ToListAsync();
         }
 
         public async Task<T?> GetById(int id, bool includeNavigation = false, bool recursiveSearch = false)
@@ -49,7 +49,7 @@ namespace FleetControl.Infrastructure.Persistence.Repositories.Generic
                 ApplyIncludes(query, recursiveSearch);
             }
 
-            return await query.SingleOrDefaultAsync(x => x.Id.Equals(id) && !x.IsDeleted);
+            return await query.Where(x => !x.IsDeleted).SingleOrDefaultAsync(x => x.Id.Equals(id) && !x.IsDeleted);
         }
 
         public async Task Update(T item)

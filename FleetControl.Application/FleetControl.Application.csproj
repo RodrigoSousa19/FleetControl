@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Queries\CostCenters\GetById\" />
     <Folder Include="Queries\Customers\GetById\" />
     <Folder Include="Queries\Drivers\GetById\" />
     <Folder Include="Queries\Projects\GetById\" />

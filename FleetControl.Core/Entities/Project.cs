@@ -2,9 +2,9 @@
 {
     public class Project : BaseEntity
     {
-        public Project(string nome, int idCostCenter, int idCustomer)
+        public Project(string name, int idCostCenter, int idCustomer)
         {
-            Name = nome;
+            Name = name;
             IdCostCenter = idCostCenter;
             IdCustomer = idCustomer;
         }
