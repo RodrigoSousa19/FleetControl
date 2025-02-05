@@ -18,7 +18,7 @@ namespace FleetControl.Application.Queries.Drivers.GetById
 
         public async Task<ResultViewModel<DriverViewModel>> Handle(GetDriverByIdQuery request, CancellationToken cancellationToken)
         {
-            var driver = await _repository.GetById(request.Id);
+            var driver = await _repository.GetById(request.Id, includeNavigation: true);
 
             if (driver is null)
                 return ResultViewModel<DriverViewModel>.Error("Não foi possível localizar o motorista informado.");

@@ -18,7 +18,7 @@ namespace FleetControl.Application.Queries.Projects.GetAll
 
         public async Task<ResultViewModel<IList<ProjectViewModel>>> Handle(GetAllProjectsQuery request, CancellationToken cancellationToken)
         {
-            var projects = await _repository.GetAll();
+            var projects = await _repository.GetAll(includeNavigation: true);
 
             var model = projects.Select(ProjectViewModel.FromEntity).ToList();
 

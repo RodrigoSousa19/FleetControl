@@ -18,7 +18,7 @@ namespace FleetControl.Application.Queries.Drivers.GetAll
 
         public async Task<ResultViewModel<IList<DriverViewModel>>> Handle(GetAllDriversQuery request, CancellationToken cancellationToken)
         {
-            var driver = await _repository.GetAll();
+            var driver = await _repository.GetAll(includeNavigation: true);
 
             var model = driver.Select(DriverViewModel.FromEntity).ToList();
 

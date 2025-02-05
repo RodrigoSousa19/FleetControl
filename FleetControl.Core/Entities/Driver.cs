@@ -9,6 +9,8 @@
             DocumentType = documentType;
 
             DriverProjects = [];
+
+            Enabled = true;
         }
         public int IdUser { get; private set; }
         public User User { get; set; }
@@ -20,6 +22,8 @@
         {
             DocumentNumber = documentNumber;
             DocumentType = documentType;
+
+            UpdatedAt = DateTime.Now;
         }
     }
 }

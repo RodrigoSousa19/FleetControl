@@ -14,7 +14,6 @@ namespace FleetControl.Core.Entities
             Observation = observation;
 
             Status = ReservationStatus.Pending;
-
             ReservationComments = [];
         }
 
@@ -35,6 +34,8 @@ namespace FleetControl.Core.Entities
             StartDate = startDate;
             EndDate = endDate;
             IdDriver = idDriver;
+
+            UpdatedAt = DateTime.Now;
         }
 
         public void ConfirmReservation()

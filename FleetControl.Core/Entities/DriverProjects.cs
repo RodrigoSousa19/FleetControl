@@ -17,6 +17,8 @@
         {
             IdDriver = idDriver;
             IdProject = idProject;
+
+            UpdatedAt = DateTime.Now;
         }
     }
 }

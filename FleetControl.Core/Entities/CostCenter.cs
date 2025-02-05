@@ -13,6 +13,8 @@
         public void Update(string description)
         {
             Description = description;
+
+            UpdatedAt = DateTime.Now;
         }
     }
 }

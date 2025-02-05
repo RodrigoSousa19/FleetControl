@@ -19,6 +19,6 @@ namespace FleetControl.Application.Models.Projects
         public string CostCenter { get; private set; }
         public bool Enabled { get; private set; }
 
-        public static ProjectViewModel FromEntity(Project entity) => new(entity.Id, entity.Name, entity.Customer.Name, entity.CostCenter.Description, entity.Enabled);
+        public static ProjectViewModel FromEntity(Project entity) => new(entity.Id, entity.Name, entity.Customer?.Name, entity.CostCenter?.Description, entity.Enabled);
     }
 }

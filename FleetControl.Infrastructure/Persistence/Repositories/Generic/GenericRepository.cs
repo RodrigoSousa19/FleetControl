@@ -1,6 +1,7 @@
 ﻿using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace FleetControl.Infrastructure.Persistence.Repositories.Generic
 {
@@ -28,25 +29,25 @@ namespace FleetControl.Infrastructure.Persistence.Repositories.Generic
             return await _dataSet.AnyAsync(g => g.Equals(id) && !g.IsDeleted);
         }
 
-        public async Task<List<T>> GetAll(bool includeNavigation = false, bool recursiveSearch = false)
+        public async Task<List<T>> GetAll(bool includeNavigation = false, bool recursiveInclude = false)
         {
             IQueryable<T> query = _dataSet;
 
             if (includeNavigation)
             {
-                ApplyIncludes(query, recursiveSearch);
+                query = ApplyIncludes(query, recursiveInclude);
             }
 
             return await query.Where(x => !x.IsDeleted).ToListAsync();
         }
 
-        public async Task<T?> GetById(int id, bool includeNavigation = false, bool recursiveSearch = false)
+        public async Task<T?> GetById(int id, bool includeNavigation = false, bool recursiveInclude = false)
         {
             IQueryable<T> query = _dataSet;
 
             if (includeNavigation)
             {
-                ApplyIncludes(query, recursiveSearch);
+                query = ApplyIncludes(query, recursiveInclude);
             }
 
             return await query.Where(x => !x.IsDeleted).SingleOrDefaultAsync(x => x.Id.Equals(id) && !x.IsDeleted);
@@ -58,7 +59,7 @@ namespace FleetControl.Infrastructure.Persistence.Repositories.Generic
             await _context.SaveChangesAsync();
         }
 
-        private IQueryable<T> ApplyIncludes(IQueryable<T> query, bool recursive)
+        private IQueryable<T> ApplyIncludes(IQueryable<T> query, bool recursiveInclude)
         {
             var entityType = _context.Model.FindEntityType(typeof(T));
 
@@ -68,7 +69,7 @@ namespace FleetControl.Infrastructure.Persistence.Repositories.Generic
             {
                 query = query.Include(navigation.Name);
 
-                if (recursive)
+                if (recursiveInclude)
                 {
                     query = ApplyThenIncludes(query, navigation);
                 }
@@ -77,7 +78,7 @@ namespace FleetControl.Infrastructure.Persistence.Repositories.Generic
             return query;
         }
 
-        private IQueryable<T> ApplyThenIncludes(IQueryable<T> query, Microsoft.EntityFrameworkCore.Metadata.INavigation navigation)
+        private IQueryable<T> ApplyThenIncludes(IQueryable<T> query, INavigation navigation)
         {
             var entityType = navigation.TargetEntityType;
 

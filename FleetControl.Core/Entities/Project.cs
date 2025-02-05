@@ -7,6 +7,8 @@
             Name = name;
             IdCostCenter = idCostCenter;
             IdCustomer = idCustomer;
+
+            Enabled = true;
         }
 
         public string Name { get; private set; }
@@ -20,6 +22,8 @@
             Name = nome;
             IdCostCenter = idCostCenter;
             IdCustomer = idCustomer;
+
+            UpdatedAt = DateTime.Now;
         }
     }
 }

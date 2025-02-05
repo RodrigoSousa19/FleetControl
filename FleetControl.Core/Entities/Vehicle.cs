@@ -14,6 +14,8 @@ namespace FleetControl.Core.Entities
             MileAge = mileAge;
 
             Status = VehicleStatus.Available;
+
+            Enabled = true;
         }
 
         public string Brand { get; private set; }
@@ -35,6 +37,8 @@ namespace FleetControl.Core.Entities
             LicensePlate = licensePlate;
             Color = color;
             MileAge = mileAge;
+
+            UpdatedAt = DateTime.Now;
         }
 
         public void SendToMaintenance()

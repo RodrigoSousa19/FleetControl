@@ -29,6 +29,8 @@ namespace FleetControl.Core.Entities
             TotalCost = totalCost;
             StartDate = startDate;
             EndDate = endDate;
+
+            UpdatedAt = DateTime.Now;
         }
 
         public void SetInProgress()

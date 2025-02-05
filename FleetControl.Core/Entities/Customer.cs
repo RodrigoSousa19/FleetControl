@@ -9,6 +9,8 @@
             Contact = contact;
             Cnpj = cnpj;
             Email = email;
+
+            Enabled = true;
         }
 
         public string Name { get; private set; }
@@ -24,6 +26,8 @@
             Contact = contact;
             Cnpj = cnpj;
             Email = email;
+
+            UpdatedAt = DateTime.Now;
         }
     }
 }

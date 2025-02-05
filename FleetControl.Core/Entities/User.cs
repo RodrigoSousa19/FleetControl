@@ -19,6 +19,8 @@
         {
             Name = name;
             Email = email;
+
+            UpdatedAt = DateTime.Now;
         }
     }
 }

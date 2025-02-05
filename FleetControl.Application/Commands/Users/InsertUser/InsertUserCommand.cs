@@ -6,8 +6,8 @@ namespace FleetControl.Application.Commands.Users.InsertUser
 {
     public class InsertUserCommand : IRequest<ResultViewModel<User>>
     {
-        public string Name { get; private set; }
-        public string Email { get; private set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
 
         public User ToEntity() => new(Name, Email);
     }
