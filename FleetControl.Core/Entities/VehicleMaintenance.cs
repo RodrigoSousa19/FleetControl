@@ -48,5 +48,17 @@ namespace FleetControl.Core.Entities
             if (Status == MaintenanceStatus.Pending)
                 Status = MaintenanceStatus.Canceled;
         }
+
+        public string GetStatusDescription()
+        {
+            return Status switch
+            {
+                MaintenanceStatus.Pending => "Pendente",
+                MaintenanceStatus.InProgress => "Em Progresso",
+                MaintenanceStatus.Completed => "Completa",
+                MaintenanceStatus.Canceled => "Cancelada",
+                _ => "Status Desconhecido"
+            };
+        }
     }
 }

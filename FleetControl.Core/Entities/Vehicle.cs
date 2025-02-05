@@ -68,5 +68,17 @@ namespace FleetControl.Core.Entities
             if (IdProject is not null)
                 IdProject = null;
         }
+
+        public string GetStatusDescription()
+        {
+            return Status switch
+            {
+                VehicleStatus.Available => "Disponível",
+                VehicleStatus.Reserved => "Reservado",
+                VehicleStatus.Inactive => "Inativo",
+                VehicleStatus.InMaintenance => "Em manutenção",
+                _ => "Status Desconhecido"
+            };
+        }
     }
 }

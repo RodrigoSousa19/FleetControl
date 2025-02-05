@@ -1,4 +1,5 @@
 ﻿using FleetControl.Core.Enums.Reservation;
+using FleetControl.Core.Enums.Vehicle;
 
 namespace FleetControl.Core.Entities
 {
@@ -53,6 +54,18 @@ namespace FleetControl.Core.Entities
         {
             if (Status == ReservationStatus.Confirmed)
                 Status = ReservationStatus.Finished;
+        }
+
+        public string GetStatusDescription()
+        {
+            return Status switch
+            {
+                ReservationStatus.Pending => "Pendente",
+                ReservationStatus.Confirmed => "Confirmada",
+                ReservationStatus.Canceled => "Cancelada",
+                ReservationStatus.Finished => "Finalizada",
+                _ => "Status Desconhecido"
+            };
         }
     }
 }
