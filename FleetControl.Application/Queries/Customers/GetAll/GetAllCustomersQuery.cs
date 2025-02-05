@@ -1,10 +1,10 @@
 ﻿using FleetControl.Application.Models;
-using FleetControl.Core.Entities;
+using FleetControl.Application.Models.Customers;
 using MediatR;
 
 namespace FleetControl.Application.Queries.Customers.GetAll
 {
-    public class GetAllCustomersQuery : IRequest<ResultViewModel<IList<Customer>>>
+    public class GetAllCustomersQuery : IRequest<ResultViewModel<IList<CustomerViewModel>>>
     {
     }
 }

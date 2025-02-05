@@ -1,10 +1,10 @@
 ﻿using FleetControl.Application.Models;
-using FleetControl.Core.Entities;
+using FleetControl.Application.Models.Reservations;
 using MediatR;
 
 namespace FleetControl.Application.Queries.Reservations.GetAll
 {
-    public class GetAllReservationsQuery : IRequest<ResultViewModel<IList<Reservation>>>
+    public class GetAllReservationsQuery : IRequest<ResultViewModel<IList<ReservationViewModel>>>
     {
     }
 }
