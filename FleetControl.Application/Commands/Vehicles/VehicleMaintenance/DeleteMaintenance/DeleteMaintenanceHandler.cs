@@ -1,6 +1,5 @@
 ﻿using FleetControl.Application.Models;
 using FleetControl.Core.Entities;
-using FleetControl.Core.Enums.Vehicle;
 using FleetControl.Core.Interfaces.Generic;
 using MediatR;
 

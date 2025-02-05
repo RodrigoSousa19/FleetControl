@@ -1,5 +1,4 @@
 ﻿using FleetControl.Core.Entities;
-using FleetControl.Core.Enums.Reservation;
 
 namespace FleetControl.Application.Models.Reservations
 {

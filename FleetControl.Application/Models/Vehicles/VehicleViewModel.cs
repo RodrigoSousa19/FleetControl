@@ -1,11 +1,10 @@
 ﻿using FleetControl.Core.Entities;
-using FleetControl.Core.Enums.Vehicle;
 
 namespace FleetControl.Application.Models.Vehicles
 {
     public class VehicleViewModel
     {
-        public VehicleViewModel(int id,string brand, string model, string fuelType, string licensePlate, string color, int mileAge, string status, DateTime? lastMaintenance, string currentProject)
+        public VehicleViewModel(int id, string brand, string model, string fuelType, string licensePlate, string color, int mileAge, string status, DateTime? lastMaintenance, string currentProject)
         {
             Id = Id;
             Brand = brand;

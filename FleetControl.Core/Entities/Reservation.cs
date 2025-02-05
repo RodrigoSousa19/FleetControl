@@ -1,5 +1,4 @@
 ﻿using FleetControl.Core.Enums.Reservation;
-using FleetControl.Core.Enums.Vehicle;
 
 namespace FleetControl.Core.Entities
 {
