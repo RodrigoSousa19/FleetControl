@@ -4,7 +4,7 @@ using MediatR;
 
 namespace FleetControl.Application.Queries.Projects.GetAll
 {
-    public class GetAllProjects : IRequest<ResultViewModel<IList<ProjectViewModel>>>
+    public class GetAllProjectsQuery : IRequest<ResultViewModel<IList<ProjectViewModel>>>
     {
     }
 }

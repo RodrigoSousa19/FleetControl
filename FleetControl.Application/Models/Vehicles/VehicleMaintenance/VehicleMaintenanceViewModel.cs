@@ -25,6 +25,6 @@ namespace FleetControl.Application.Models.Vehicles
         public DateTime EndDate { get; private set; }
         public string Status { get; private set; }
 
-        public VehicleMaintenanceViewModel FromEntity(VehicleMaintenance entity) => new(entity.Id, entity.Vehicle.Model, entity.Vehicle.LicensePlate, entity.Description, entity.TotalCost, entity.StartDate, entity.EndDate, entity.GetStatusDescription());
+        public static VehicleMaintenanceViewModel FromEntity(VehicleMaintenance entity) => new(entity.Id, entity.Vehicle.Model, entity.Vehicle.LicensePlate, entity.Description, entity.TotalCost, entity.StartDate, entity.EndDate, entity.GetStatusDescription());
     }
 }
