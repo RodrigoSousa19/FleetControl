@@ -1,19 +1,11 @@
-﻿using FleetControl.Application.Commands.Projects.DeleteProject;
-using FleetControl.Application.Commands.Projects.DisableProject;
-using FleetControl.Application.Commands.Projects.EnableProject;
-using FleetControl.Application.Commands.Projects.InsertProject;
-using FleetControl.Application.Commands.Projects.UpdateProject;
-using FleetControl.Application.Commands.Vehicles.DeleteVehicle;
+﻿using FleetControl.Application.Commands.Vehicles.DeleteVehicle;
 using FleetControl.Application.Commands.Vehicles.DisableVehicle;
 using FleetControl.Application.Commands.Vehicles.EnableVehicle;
 using FleetControl.Application.Commands.Vehicles.InsertVehicle;
 using FleetControl.Application.Commands.Vehicles.UpdateVehicle;
-using FleetControl.Application.Queries.Projects.GetAll;
-using FleetControl.Application.Queries.Projects.GetById;
 using FleetControl.Application.Queries.Vehicles.GetAll;
 using FleetControl.Application.Queries.Vehicles.GetById;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FleetControl.API.Controllers

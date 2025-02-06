@@ -18,7 +18,7 @@ namespace FleetControl.Application.Queries.Vehicles
 
         public async Task<ResultViewModel<VehicleMaintenanceViewModel>> Handle(GetVehicleMaintenanceByIdQuery request, CancellationToken cancellationToken)
         {
-            var maintenance = await _repository.GetById(request.Id);
+            var maintenance = await _repository.GetById(request.Id, includeNavigation: true);
 
             if (maintenance is null)
                 return ResultViewModel<VehicleMaintenanceViewModel>.Error("Não foi possível localizar a manutenção informada.");

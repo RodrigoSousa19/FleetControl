@@ -18,7 +18,7 @@ namespace FleetControl.Application.Queries.Vehicles
 
         public async Task<ResultViewModel<IList<VehicleMaintenanceViewModel>>> Handle(GetAllVehicleMaintenanceQuery request, CancellationToken cancellationToken)
         {
-            var maintenances = await _repository.GetAll();
+            var maintenances = await _repository.GetAll(includeNavigation: true);
 
             var model = maintenances.Select(VehicleMaintenanceViewModel.FromEntity).ToList();
 

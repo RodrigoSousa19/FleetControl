@@ -6,7 +6,7 @@ namespace FleetControl.Application.Models.Vehicles
     {
         public VehicleViewModel(int id, string brand, string model, string fuelType, string licensePlate, string color, int mileAge, string status, DateTime? lastMaintenance, string currentProject)
         {
-            Id = Id;
+            Id = id;
             Brand = brand;
             Model = model;
             FuelType = fuelType;

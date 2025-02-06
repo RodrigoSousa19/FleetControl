@@ -50,12 +50,6 @@ namespace FleetControl.Core.Entities
             }
         }
 
-        public void SetInactive()
-        {
-            if (Status != VehicleStatus.Reserved)
-                Status = VehicleStatus.Inactive;
-        }
-
         public void SetReserved(int idProject)
         {
             if (Status == VehicleStatus.Available)
@@ -79,7 +73,6 @@ namespace FleetControl.Core.Entities
             {
                 VehicleStatus.Available => "Disponível",
                 VehicleStatus.Reserved => "Reservado",
-                VehicleStatus.Inactive => "Inativo",
                 VehicleStatus.InMaintenance => "Em manutenção",
                 _ => "Status Desconhecido"
             };

@@ -4,7 +4,6 @@
     {
         Available,
         Reserved,
-        InMaintenance,
-        Inactive
+        InMaintenance
     }
 }
