@@ -18,7 +18,7 @@ namespace FleetControl.Application.Queries.Reservations.GetAll
 
         public async Task<ResultViewModel<IList<ReservationViewModel>>> Handle(GetAllReservationsQuery request, CancellationToken cancellationToken)
         {
-            var reservations = await _repository.GetAll();
+            var reservations = await _repository.GetAll(includeNavigation: true,true);
 
             var model = reservations.Select(ReservationViewModel.FromEntity).ToList();
 

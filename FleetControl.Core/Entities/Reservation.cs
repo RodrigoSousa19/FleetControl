@@ -4,9 +4,14 @@ namespace FleetControl.Core.Entities
 {
     public class Reservation : BaseEntity
     {
-        public Reservation(int idCustomer, int idDriver, int idVehicle, DateTime startDate, DateTime endDate, string observation)
+        public Reservation()
         {
-            IdCustomer = idCustomer;
+            
+        }
+
+        public Reservation(int idProject, int idDriver, int idVehicle, DateTime startDate, DateTime endDate, string observation)
+        {
+            IdProject = idProject;
             IdDriver = idDriver;
             IdVehicle = idVehicle;
             StartDate = startDate;
@@ -17,8 +22,8 @@ namespace FleetControl.Core.Entities
             ReservationComments = [];
         }
 
-        public int IdCustomer { get; private set; }
-        public Customer Customer { get; set; }
+        public int IdProject { get; private set; }
+        public Project Project { get; set; }
         public int IdDriver { get; private set; }
         public Driver Driver { get; set; }
         public int IdVehicle { get; private set; }

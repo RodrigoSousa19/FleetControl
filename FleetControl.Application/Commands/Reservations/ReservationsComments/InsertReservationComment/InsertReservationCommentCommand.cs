@@ -2,9 +2,9 @@
 using FleetControl.Core.Entities;
 using MediatR;
 
-namespace FleetControl.Application.Commands.Reservations.ReservationsComments.InsertReservationComment
+namespace FleetControl.Application.Commands.Reservations.ReservationsComments
 {
-    public class InsertReservationCommand : IRequest<ResultViewModel<ReservationComment>>
+    public class InsertReservationCommentCommand : IRequest<ResultViewModel<ReservationComment>>
     {
         public int IdUser { get; set; }
         public int IdReservation { get; set; }

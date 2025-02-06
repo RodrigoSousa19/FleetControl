@@ -15,7 +15,7 @@ namespace FleetControl.Infrastructure.Persistence.Configurations.Reservations
             builder.Property(r => r.EndDate).IsRequired();
             builder.Property(r => r.Observation).HasMaxLength(500).IsRequired();
 
-            builder.HasOne(r => r.Customer).WithMany().HasForeignKey(r => r.IdCustomer).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(r => r.Project).WithMany().HasForeignKey(r => r.IdProject).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(r => r.Vehicle).WithMany().HasForeignKey(r => r.IdVehicle).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(r => r.Driver).WithMany().HasForeignKey(r => r.IdDriver).OnDelete(DeleteBehavior.Restrict);
         }

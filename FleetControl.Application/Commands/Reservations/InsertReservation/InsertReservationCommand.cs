@@ -6,13 +6,13 @@ namespace FleetControl.Application.Commands.Reservations.InsertReservation
 {
     public class InsertReservationCommand : IRequest<ResultViewModel<Reservation>>
     {
-        public int IdCustomer { get; private set; }
-        public int IdDriver { get; private set; }
-        public int IdVehicle { get; private set; }
-        public DateTime StartDate { get; private set; }
-        public DateTime EndDate { get; private set; }
-        public string Observation { get; private set; }
+        public int IdProject { get; set; }
+        public int IdDriver { get; set; }
+        public int IdVehicle { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public string Observation { get; set; }
 
-        public Reservation ToEntity() => new(IdCustomer, IdDriver, IdVehicle, StartDate, EndDate, Observation);
+        public Reservation ToEntity() => new(IdProject, IdDriver, IdVehicle, StartDate, EndDate, Observation);
     }
 }

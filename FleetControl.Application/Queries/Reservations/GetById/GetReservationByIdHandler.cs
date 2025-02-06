@@ -18,7 +18,7 @@ namespace FleetControl.Application.Queries.Reservations.GetById
 
         public async Task<ResultViewModel<ReservationViewModel>> Handle(GetReservationByIdQuery request, CancellationToken cancellationToken)
         {
-            var reservation = await _repository.GetById(request.Id);
+            var reservation = await _repository.GetById(request.Id, includeNavigation: true);
 
             if (reservation is null)
                 return ResultViewModel<ReservationViewModel>.Error("Não foi possível localizar a reserva informada.");

@@ -3,7 +3,7 @@ using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
 using MediatR;
 
-namespace FleetControl.Application.Commands.Reservations.ReservationsComments.DeleteReservationComment
+namespace FleetControl.Application.Commands.Reservations.ReservationsComments
 {
     public class DeleteReservationCommentHandler : IRequestHandler<DeleteReservationCommentCommand, ResultViewModel>
     {

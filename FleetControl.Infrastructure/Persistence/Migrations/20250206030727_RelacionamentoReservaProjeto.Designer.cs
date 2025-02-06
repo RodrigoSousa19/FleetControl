@@ -4,6 +4,7 @@ using FleetControl.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FleetControl.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(FleetControlDbContext))]
-    partial class FleetControlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250206030727_RelacionamentoReservaProjeto")]
+    partial class RelacionamentoReservaProjeto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -246,6 +249,9 @@ namespace FleetControl.Infrastructure.Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -259,9 +265,9 @@ namespace FleetControl.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("IdDriver");
 
-                    b.HasIndex("IdProject");
-
                     b.HasIndex("IdVehicle");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Reservations");
                 });
@@ -508,15 +514,15 @@ namespace FleetControl.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FleetControl.Core.Entities.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("IdProject")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("FleetControl.Core.Entities.Vehicle", "Vehicle")
                         .WithMany()
                         .HasForeignKey("IdVehicle")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FleetControl.Core.Entities.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

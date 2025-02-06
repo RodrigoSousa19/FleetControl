@@ -9,6 +9,9 @@ namespace FleetControl.Infrastructure.Persistence.Repositories.Generic
     {
         private readonly FleetControlDbContext _context;
         private readonly DbSet<T> _dataSet;
+        private readonly HashSet<string> _includedPaths = new();
+
+        private const int MAX_DEPTH_RECURSIVE_INCLUDE = 3;
 
         public GenericRepository(FleetControlDbContext context)
         {
@@ -62,29 +65,44 @@ namespace FleetControl.Infrastructure.Persistence.Repositories.Generic
         private IQueryable<T> ApplyIncludes(IQueryable<T> query, bool recursiveInclude)
         {
             var entityType = _context.Model.FindEntityType(typeof(T));
-
             if (entityType == null) return query;
 
             foreach (var navigation in entityType.GetNavigations())
             {
-                query = query.Include(navigation.Name);
+                var navigationPath = navigation.Name;
 
-                if (recursiveInclude)
+                if (_includedPaths.Add(navigationPath))
                 {
-                    query = ApplyThenIncludes(query, navigation);
+                    query = query.Include(navigationPath);
+
+                    if (recursiveInclude)
+                    {
+                        query = ApplyThenIncludes(query, navigation, navigationPath, 1);
+                    }
                 }
             }
 
             return query;
         }
 
-        private IQueryable<T> ApplyThenIncludes(IQueryable<T> query, INavigation navigation)
+        private IQueryable<T> ApplyThenIncludes(IQueryable<T> query, INavigation navigation, string parentPath, int currentDepth)
         {
+            if (currentDepth >= MAX_DEPTH_RECURSIVE_INCLUDE) return query;
+
             var entityType = navigation.TargetEntityType;
 
             foreach (var nestedNavigation in entityType.GetNavigations())
             {
-                query = query.Include($"{navigation.Name}.{nestedNavigation.Name}");
+                if (nestedNavigation.Name == navigation.DeclaringType.ClrType.Name)
+                    continue;
+
+                var nestedPath = $"{parentPath}.{nestedNavigation.Name}";
+
+                if (_includedPaths.Add(nestedPath))
+                {
+                    query = query.Include(nestedPath);
+                    query = ApplyThenIncludes(query, nestedNavigation, nestedPath, currentDepth + 1);
+                }
             }
 
             return query;

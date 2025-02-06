@@ -1,7 +1,7 @@
 ﻿using FleetControl.Application.Models;
 using MediatR;
 
-namespace FleetControl.Application.Commands.Reservations.ReservationsComments.DeleteReservationComment
+namespace FleetControl.Application.Commands.Reservations.ReservationsComments
 {
     public class DeleteReservationCommentCommand : IRequest<ResultViewModel>
     {
