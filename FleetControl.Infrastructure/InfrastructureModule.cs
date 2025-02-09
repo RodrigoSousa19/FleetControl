@@ -1,5 +1,6 @@
 ﻿using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Infrastructure.Persistence.Repositories.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +13,8 @@ namespace FleetControl.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddRepositories()
-                .AddData(configuration);
+                .AddData(configuration)
+                .AddUnitOfWork();
 
             return services;
         }
@@ -28,6 +30,12 @@ namespace FleetControl.Infrastructure
         private static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            return services;
+        }
+
+        private static IServiceCollection AddUnitOfWork(this IServiceCollection services)
+        {
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
     }

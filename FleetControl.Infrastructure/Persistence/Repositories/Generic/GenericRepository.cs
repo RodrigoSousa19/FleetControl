@@ -1,7 +1,6 @@
 ﻿using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace FleetControl.Infrastructure.Persistence.Repositories.Generic
 {

@@ -3,7 +3,7 @@ using FleetControl.Core.Interfaces.Generic;
 
 namespace FleetControl.Infrastructure.Persistence.Repositories
 {
-    public interface 
+    public interface
         IUnitOfWork : IDisposable
     {
         IGenericRepository<CostCenter> CostCenterRepository { get; }
