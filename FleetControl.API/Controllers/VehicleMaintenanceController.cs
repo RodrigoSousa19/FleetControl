@@ -1,7 +1,6 @@
 ﻿using FleetControl.Application.Commands.Vehicles;
 using FleetControl.Application.Queries.Vehicles;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FleetControl.API.Controllers

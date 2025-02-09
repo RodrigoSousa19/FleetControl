@@ -6,7 +6,7 @@ namespace FleetControl.Core.Entities
     {
         public Reservation()
         {
-            
+
         }
 
         public Reservation(int idProject, int idDriver, int idVehicle, DateTime startDate, DateTime endDate, string observation)

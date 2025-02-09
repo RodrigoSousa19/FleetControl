@@ -26,7 +26,7 @@ namespace FleetControl.Application.Commands.Vehicles
 
             var vehicle = await _vehicleRepository.GetById(maintenance.IdVehicle);
 
-            if (vehicle is not Vehicle { Status: VehicleStatus.Available})
+            if (vehicle is not Vehicle { Status: VehicleStatus.Available })
                 return ResultViewModel.Error("A manutenção não pode ser iniciada neste veículo até que ele esteja disponível!");
 
             vehicle.SendToMaintenance();
