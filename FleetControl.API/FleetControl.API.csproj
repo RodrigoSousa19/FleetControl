@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ExceptionsHandler\" />
     <Folder Include="Extensions\" />
   </ItemGroup>
 

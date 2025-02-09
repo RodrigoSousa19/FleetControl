@@ -10,6 +10,7 @@ namespace FleetControl.Infrastructure.Persistence.Repositories.Generic
         private readonly FleetControlDbContext _context;
         private readonly DbSet<T> _dataSet;
         private readonly HashSet<string> _includedPaths = new();
+        private readonly Dictionary<Type, List<string>> _navigationCache = new();
 
         private const int MAX_DEPTH_RECURSIVE_INCLUDE = 3;
 
@@ -64,20 +65,25 @@ namespace FleetControl.Infrastructure.Persistence.Repositories.Generic
 
         private IQueryable<T> ApplyIncludes(IQueryable<T> query, bool recursiveInclude)
         {
-            var entityType = _context.Model.FindEntityType(typeof(T));
-            if (entityType == null) return query;
-
-            foreach (var navigation in entityType.GetNavigations())
+            if (!_navigationCache.TryGetValue(typeof(T), out var navigations))
             {
-                var navigationPath = navigation.Name;
+                navigations = _context.Model.FindEntityType(typeof(T))?
+                    .GetNavigations()
+                    .Select(n => n.Name)
+                    .ToList() ?? new List<string>();
 
+                _navigationCache[typeof(T)] = navigations;
+            }
+
+            foreach (var navigationPath in navigations)
+            {
                 if (_includedPaths.Add(navigationPath))
                 {
                     query = query.Include(navigationPath);
 
                     if (recursiveInclude)
                     {
-                        query = ApplyThenIncludes(query, navigation, navigationPath, 1);
+                        query = ApplyThenIncludes(query, navigationPath, 1);
                     }
                 }
             }
@@ -85,27 +91,51 @@ namespace FleetControl.Infrastructure.Persistence.Repositories.Generic
             return query;
         }
 
-        private IQueryable<T> ApplyThenIncludes(IQueryable<T> query, INavigation navigation, string parentPath, int currentDepth)
+        private IQueryable<T> ApplyThenIncludes(IQueryable<T> query, string parentPath, int currentDepth)
         {
             if (currentDepth >= MAX_DEPTH_RECURSIVE_INCLUDE) return query;
 
-            var entityType = navigation.TargetEntityType;
+            var parentType = GetTypeFromPath(typeof(T), parentPath);
+            if (parentType == null) return query;
 
-            foreach (var nestedNavigation in entityType.GetNavigations())
+            if (!_navigationCache.TryGetValue(parentType, out var nestedNavigations))
             {
-                if (nestedNavigation.Name == navigation.DeclaringType.ClrType.Name)
-                    continue;
+                nestedNavigations = _context.Model.FindEntityType(parentType)?
+                    .GetNavigations()
+                    .Select(n => n.Name)
+                    .ToList() ?? [];
 
-                var nestedPath = $"{parentPath}.{nestedNavigation.Name}";
+                _navigationCache[parentType] = nestedNavigations;
+            }
+
+            foreach (var nestedNavigation in nestedNavigations)
+            {
+                var nestedPath = $"{parentPath}.{nestedNavigation}";
 
                 if (_includedPaths.Add(nestedPath))
                 {
                     query = query.Include(nestedPath);
-                    query = ApplyThenIncludes(query, nestedNavigation, nestedPath, currentDepth + 1);
+                    query = ApplyThenIncludes(query, nestedPath, currentDepth + 1);
                 }
             }
 
             return query;
+        }
+
+        private Type? GetTypeFromPath(Type rootType, string path)
+        {
+            var properties = path.Split('.');
+            var currentType = rootType;
+
+            foreach (var propName in properties)
+            {
+                var propInfo = currentType.GetProperty(propName);
+                if (propInfo == null) return null;
+
+                currentType = propInfo.PropertyType;
+            }
+
+            return currentType;
         }
     }
 }
