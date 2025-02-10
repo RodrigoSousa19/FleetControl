@@ -1,17 +1,17 @@
 ﻿using FleetControl.Application.Models;
 using FleetControl.Application.Validations;
 using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.CostCenters.InsertCostCenter
 {
     public class InsertCostCenterHandler : IRequestHandler<InsertCostCenterCommand, ResultViewModel<CostCenter>>
     {
-        private readonly IGenericRepository<CostCenter> _repository;
-        public InsertCostCenterHandler(IGenericRepository<CostCenter> repository)
+        private readonly IUnitOfWork _unitOfWork;
+        public InsertCostCenterHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
         public async Task<ResultViewModel<CostCenter>> Handle(InsertCostCenterCommand request, CancellationToken cancellationToken)
         {
@@ -19,7 +19,9 @@ namespace FleetControl.Application.Commands.CostCenters.InsertCostCenter
                 .IsNotNullOrEmpty(request.Description, ErrorsList.EmptyDescription)
                 .Validate();
 
-            var costCenter = await _repository.Create(request.ToEntity());
+            var costCenter = await _unitOfWork.CostCenterRepository.Create(request.ToEntity());
+
+            await _unitOfWork.SaveChangesAsync();
 
             return ResultViewModel<CostCenter>.Success(costCenter);
         }

@@ -145,7 +145,7 @@ namespace FleetControl.Application.Validations
         {
             return AddExpression(() =>
             {
-                if(DateTime.TryParse(startDate.ToString(),out DateTime start) && DateTime.TryParse(endDate.ToString(),out DateTime end))
+                if (DateTime.TryParse(startDate.ToString(), out DateTime start) && DateTime.TryParse(endDate.ToString(), out DateTime end))
                 {
                     var startDateAfterEndDate = start > end;
                     var endDateBeforeStartDate = end < start;

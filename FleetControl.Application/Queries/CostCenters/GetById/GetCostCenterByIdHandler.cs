@@ -2,6 +2,7 @@
 using FleetControl.Application.Models.CostCenters;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Queries.CostCenters.GetById
@@ -9,16 +10,16 @@ namespace FleetControl.Application.Queries.CostCenters.GetById
     public class GetCostCenterByIdHandler : IRequestHandler<GetCostCenterByIdQuery, ResultViewModel<CostCenterViewModel>>
     {
 
-        private readonly IGenericRepository<CostCenter> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetCostCenterByIdHandler(IGenericRepository<CostCenter> repository)
+        public GetCostCenterByIdHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel<CostCenterViewModel>> Handle(GetCostCenterByIdQuery request, CancellationToken cancellationToken)
         {
-            var costCenter = await _repository.GetById(request.Id);
+            var costCenter = await _unitOfWork.CostCenterRepository.GetById(request.Id);
 
             if (costCenter is null)
                 return ResultViewModel<CostCenterViewModel>.Error("Não foi possível localizar o centro de custo informado.");

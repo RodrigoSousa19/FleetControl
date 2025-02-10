@@ -1,29 +1,30 @@
 ﻿using FleetControl.Application.Models;
-using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Reservations.ReservationsComments
 {
     public class DeleteReservationCommentHandler : IRequestHandler<DeleteReservationCommentCommand, ResultViewModel>
     {
-        private readonly IGenericRepository<ReservationComment> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteReservationCommentHandler(IGenericRepository<ReservationComment> repository)
+        public DeleteReservationCommentHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel> Handle(DeleteReservationCommentCommand request, CancellationToken cancellationToken)
         {
-            var comment = await _repository.GetById(request.Id);
+            var comment = await _unitOfWork.ReservationCommentRepository.GetById(request.Id);
 
             if (comment is null)
                 return ResultViewModel.Error("Não foi possível encontrar o comentário especificado");
 
             comment.SetAsDeleted();
 
-            await _repository.Update(comment);
+            await _unitOfWork.ReservationCommentRepository.Update(comment);
+
+            await _unitOfWork.SaveChangesAsync();
 
             return ResultViewModel.Success();
         }

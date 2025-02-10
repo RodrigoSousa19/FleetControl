@@ -1,24 +1,22 @@
-﻿using FleetControl.Application.Commands.Drivers.InsertDriver;
-using FleetControl.Application.Models;
+﻿using FleetControl.Application.Models;
 using FleetControl.Application.Validations;
 using FleetControl.Application.Validations.CustomValidators;
-using FleetControl.Core.Entities;
 using FleetControl.Core.Enums.User;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Drivers.UpdateDriver
 {
     public class UpdateDriverHandler : IRequestHandler<UpdateDriverCommand, ResultViewModel>
     {
-        private readonly IGenericRepository<Driver> _repository;
-        public UpdateDriverHandler(IGenericRepository<Driver> repository)
+        private readonly IUnitOfWork _unitOfWork;
+        public UpdateDriverHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
         public async Task<ResultViewModel> Handle(UpdateDriverCommand request, CancellationToken cancellationToken)
         {
-            var driver = await _repository.GetById(request.IdDriver);
+            var driver = await _unitOfWork.DriverRepository.GetById(request.IdDriver);
 
             if (driver is null)
                 return ResultViewModel.Error("Não foi possível encontrar o motorista informado.");
@@ -27,7 +25,9 @@ namespace FleetControl.Application.Commands.Drivers.UpdateDriver
 
             driver.Update(request.DocumentNumber, request.DocumentType);
 
-            await _repository.Update(driver);
+            await _unitOfWork.DriverRepository.Update(driver);
+
+            await _unitOfWork.SaveChangesAsync();
 
             return ResultViewModel.Success();
         }

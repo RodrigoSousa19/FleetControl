@@ -18,7 +18,7 @@ namespace FleetControl.Infrastructure.Persistence.Repositories
         IGenericRepository<VehicleMaintenance> VehicleMaintenanceRepository { get; }
 
         Task SaveChangesAsync();
-        Task BeginTransactin();
+        Task BeginTransactionAsync();
         Task CommitAsync();
     }
 }

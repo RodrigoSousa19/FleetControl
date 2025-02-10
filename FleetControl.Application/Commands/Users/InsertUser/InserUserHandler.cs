@@ -1,7 +1,7 @@
 ﻿using FleetControl.Application.Models;
 using FleetControl.Application.Validations;
 using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Users.InsertUser
@@ -9,11 +9,11 @@ namespace FleetControl.Application.Commands.Users.InsertUser
     public class InsertUserHandler : IRequestHandler<InsertUserCommand, ResultViewModel<User>>
     {
 
-        private readonly IGenericRepository<User> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public InsertUserHandler(IGenericRepository<User> repository)
+        public InsertUserHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel<User>> Handle(InsertUserCommand request, CancellationToken cancellationToken)
@@ -23,7 +23,9 @@ namespace FleetControl.Application.Commands.Users.InsertUser
                 .IsEmailValid(request.Email, ErrorsList.InvalidEmail)
                 .Validate();
 
-            var user = await _repository.Create(request.ToEntity());
+            var user = await _unitOfWork.UserRepository.Create(request.ToEntity());
+
+            await _unitOfWork.SaveChangesAsync();
 
             return ResultViewModel<User>.Success(user);
         }

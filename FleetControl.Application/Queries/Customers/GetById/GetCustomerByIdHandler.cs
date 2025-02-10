@@ -2,6 +2,7 @@
 using FleetControl.Application.Models.Customers;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Queries.Customers.GetById
@@ -9,16 +10,16 @@ namespace FleetControl.Application.Queries.Customers.GetById
     public class GetCustomerByIdHandler : IRequestHandler<GetCustomerByIdQuery, ResultViewModel<CustomerViewModel>>
     {
 
-        private readonly IGenericRepository<Customer> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetCustomerByIdHandler(IGenericRepository<Customer> repository)
+        public GetCustomerByIdHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel<CustomerViewModel>> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
         {
-            var customer = await _repository.GetById(request.Id);
+            var customer = await _unitOfWork.CustomerRepository.GetById(request.Id);
 
             if (customer is null)
                 return ResultViewModel<CustomerViewModel>.Error("Não foi possível localizar o cliente informado.");

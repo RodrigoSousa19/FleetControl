@@ -2,6 +2,7 @@
 using FleetControl.Application.Models.Reservations;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Queries.Reservations.GetAll
@@ -9,16 +10,16 @@ namespace FleetControl.Application.Queries.Reservations.GetAll
     public class GetAllReservationsHandler : IRequestHandler<GetAllReservationsQuery, ResultViewModel<IList<ReservationViewModel>>>
     {
 
-        private readonly IGenericRepository<Reservation> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetAllReservationsHandler(IGenericRepository<Reservation> repository)
+        public GetAllReservationsHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel<IList<ReservationViewModel>>> Handle(GetAllReservationsQuery request, CancellationToken cancellationToken)
         {
-            var reservations = await _repository.GetAll(includeNavigation: true, true);
+            var reservations = await _unitOfWork.ReservationRepository.GetAll(includeNavigation: true,recursiveSearch: true);
 
             var model = reservations.Select(ReservationViewModel.FromEntity).ToList();
 

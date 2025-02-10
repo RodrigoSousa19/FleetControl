@@ -1,18 +1,17 @@
 ﻿using FleetControl.Application.Models;
 using FleetControl.Application.Validations;
-using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Vehicles
 {
     public class UpdateMaintenanceHandler : IRequestHandler<UpdateMaintenanceCommand, ResultViewModel>
     {
-        private readonly IGenericRepository<VehicleMaintenance> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateMaintenanceHandler(IGenericRepository<VehicleMaintenance> repository)
+        public UpdateMaintenanceHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel> Handle(UpdateMaintenanceCommand request, CancellationToken cancellationToken)
@@ -23,13 +22,15 @@ namespace FleetControl.Application.Commands.Vehicles
             .IsNotNullOrEmpty(request.Description, ErrorsList.EmptyDescription)
             .Validate();
 
-            var maintenance = await _repository.GetById(request.Id);
+            var maintenance = await _unitOfWork.VehicleMaintenanceRepository.GetById(request.Id);
 
             if (maintenance is not null)
             {
                 maintenance.Update(request.Description, request.TotalCost, request.StartDate, request.EndDate);
 
-                await _repository.Update(maintenance);
+                await _unitOfWork.VehicleMaintenanceRepository.Update(maintenance);
+
+                await _unitOfWork.SaveChangesAsync();
 
                 return ResultViewModel.Success();
             }

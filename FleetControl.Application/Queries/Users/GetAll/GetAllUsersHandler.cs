@@ -1,7 +1,6 @@
 ﻿using FleetControl.Application.Models;
 using FleetControl.Application.Models.Users;
-using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Queries.Users.GetAll
@@ -9,16 +8,16 @@ namespace FleetControl.Application.Queries.Users.GetAll
     public class GetAllUsersHandler : IRequestHandler<GetAllUsersQuery, ResultViewModel<IList<UserViewModel>>>
     {
 
-        private readonly IGenericRepository<User> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetAllUsersHandler(IGenericRepository<User> repository)
+        public GetAllUsersHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel<IList<UserViewModel>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
         {
-            var users = await _repository.GetAll();
+            var users = await _unitOfWork.UserRepository.GetAll();
 
             var model = users.Select(UserViewModel.FromEntity).ToList();
 

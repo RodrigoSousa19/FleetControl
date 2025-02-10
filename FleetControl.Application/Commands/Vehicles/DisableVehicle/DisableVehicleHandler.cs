@@ -1,21 +1,20 @@
 ﻿using FleetControl.Application.Models;
-using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Vehicles.DisableVehicle
 {
     public class DisableVehicleHandler : IRequestHandler<DisableVehicleCommand, ResultViewModel>
     {
-        private readonly IGenericRepository<Vehicle> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DisableVehicleHandler(IGenericRepository<Vehicle> repository)
+        public DisableVehicleHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
         public async Task<ResultViewModel> Handle(DisableVehicleCommand request, CancellationToken cancellationToken)
         {
-            var vehicle = await _repository.GetById(request.Id);
+            var vehicle = await _unitOfWork.VehicleRepository.GetById(request.Id);
 
             if (vehicle is null)
                 return ResultViewModel.Error("Não foi possível encontrar o veículo informado.");
@@ -25,7 +24,9 @@ namespace FleetControl.Application.Commands.Vehicles.DisableVehicle
 
             vehicle.Disable();
 
-            await _repository.Update(vehicle);
+            await _unitOfWork.VehicleRepository.Update(vehicle);
+
+            await _unitOfWork.SaveChangesAsync();
 
             return ResultViewModel.Success();
         }

@@ -2,6 +2,7 @@
 using FleetControl.Application.Models.Reservations;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Queries.Reservations.GetById
@@ -9,16 +10,16 @@ namespace FleetControl.Application.Queries.Reservations.GetById
     public class GetReservationByIdHandler : IRequestHandler<GetReservationByIdQuery, ResultViewModel<ReservationViewModel>>
     {
 
-        private readonly IGenericRepository<Reservation> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetReservationByIdHandler(IGenericRepository<Reservation> repository)
+        public GetReservationByIdHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel<ReservationViewModel>> Handle(GetReservationByIdQuery request, CancellationToken cancellationToken)
         {
-            var reservation = await _repository.GetById(request.Id, includeNavigation: true);
+            var reservation = await _unitOfWork.ReservationRepository.GetById(request.Id, includeNavigation: true, recursiveSearch: true);
 
             if (reservation is null)
                 return ResultViewModel<ReservationViewModel>.Error("Não foi possível localizar a reserva informada.");

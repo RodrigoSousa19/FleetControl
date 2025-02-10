@@ -1,6 +1,5 @@
 ﻿using FleetControl.Application.Models;
-using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Users.DeleteUser
@@ -8,23 +7,25 @@ namespace FleetControl.Application.Commands.Users.DeleteUser
     public class DeleteUserHandler : IRequestHandler<DeleteUserCommand, ResultViewModel>
     {
 
-        private readonly IGenericRepository<User> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteUserHandler(IGenericRepository<User> repository)
+        public DeleteUserHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _repository.GetById(request.Id);
+            var user = await _unitOfWork.UserRepository.GetById(request.Id);
 
             if (user is null)
                 return ResultViewModel.Error("Não foi possível encontrar o usuário especificado");
 
             user.SetAsDeleted();
 
-            await _repository.Update(user);
+            await _unitOfWork.UserRepository.Update(user);
+
+            await _unitOfWork.SaveChangesAsync();
 
             return ResultViewModel.Success();
         }

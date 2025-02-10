@@ -1,24 +1,23 @@
 ﻿using FleetControl.Application.Models;
 using FleetControl.Application.Validations;
 using FleetControl.Application.Validations.CustomValidators;
-using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Customers.UpdateCustomer
 {
     public class UpdateCustomerHandler : IRequestHandler<UpdateCustomerCommand, ResultViewModel>
     {
-        private readonly IGenericRepository<Customer> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateCustomerHandler(IGenericRepository<Customer> repository)
+        public UpdateCustomerHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
-            var customer = await _repository.GetById(request.IdCustomer);
+            var customer = await _unitOfWork.CustomerRepository.GetById(request.IdCustomer);
 
             if (customer is null)
                 return ResultViewModel.Error("Não foi possível encontrar o cliente informado.");
@@ -30,7 +29,9 @@ namespace FleetControl.Application.Commands.Customers.UpdateCustomer
 
             customer.Update(request.Name, request.Address, request.Contact, request.Cnpj, request.Email);
 
-            await _repository.Update(customer);
+            await _unitOfWork.CustomerRepository.Update(customer);
+
+            await _unitOfWork.SaveChangesAsync();
 
             return ResultViewModel.Success();
         }

@@ -1,22 +1,21 @@
 ﻿using FleetControl.Application.Models;
-using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Customers.DisableCustomer
 {
     public class DisableCustomerHandler : IRequestHandler<DisableCustomerCommand, ResultViewModel>
     {
-        private readonly IGenericRepository<Customer> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DisableCustomerHandler(IGenericRepository<Customer> repository)
+        public DisableCustomerHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel> Handle(DisableCustomerCommand request, CancellationToken cancellationToken)
         {
-            var customer = await _repository.GetById(request.Id);
+            var customer = await _unitOfWork.CustomerRepository.GetById(request.Id);
 
             if (customer is null)
                 return ResultViewModel.Error("Não foi possível encontrar o cliente informado.");
@@ -26,7 +25,9 @@ namespace FleetControl.Application.Commands.Customers.DisableCustomer
 
             customer.Disable();
 
-            await _repository.Update(customer);
+            await _unitOfWork.CustomerRepository.Update(customer);
+
+            await _unitOfWork.SaveChangesAsync();
 
             return ResultViewModel.Success();
         }

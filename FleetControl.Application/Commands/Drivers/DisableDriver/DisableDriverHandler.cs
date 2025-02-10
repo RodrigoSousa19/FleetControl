@@ -1,20 +1,19 @@
 ﻿using FleetControl.Application.Models;
-using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Drivers.DisableDriver
 {
     public class DisableDriverHandler : IRequestHandler<DisableDriverCommand, ResultViewModel>
     {
-        private readonly IGenericRepository<Driver> _repository;
-        public DisableDriverHandler(IGenericRepository<Driver> repository)
+        private readonly IUnitOfWork _unitOfWork;
+        public DisableDriverHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
         public async Task<ResultViewModel> Handle(DisableDriverCommand request, CancellationToken cancellationToken)
         {
-            var driver = await _repository.GetById(request.Id);
+            var driver = await _unitOfWork.DriverRepository.GetById(request.Id);
 
             if (driver is null)
                 return ResultViewModel.Error("Não foi possível encontrar o motorista informado.");
@@ -24,7 +23,9 @@ namespace FleetControl.Application.Commands.Drivers.DisableDriver
 
             driver.Disable();
 
-            await _repository.Update(driver);
+            await _unitOfWork.DriverRepository.Update(driver);
+
+            await _unitOfWork.SaveChangesAsync();
 
             return ResultViewModel.Success();
         }

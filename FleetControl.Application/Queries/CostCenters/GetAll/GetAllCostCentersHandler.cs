@@ -2,6 +2,7 @@
 using FleetControl.Application.Models.CostCenters;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Queries.CostCenters.GetAll
@@ -9,16 +10,16 @@ namespace FleetControl.Application.Queries.CostCenters.GetAll
     public class GetAllCostCentersHandler : IRequestHandler<GetAllCostCentersQuery, ResultViewModel<IList<CostCenterViewModel>>>
     {
 
-        private readonly IGenericRepository<CostCenter> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetAllCostCentersHandler(IGenericRepository<CostCenter> repository)
+        public GetAllCostCentersHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel<IList<CostCenterViewModel>>> Handle(GetAllCostCentersQuery request, CancellationToken cancellationToken)
         {
-            var costCenters = await _repository.GetAll();
+            var costCenters = await _unitOfWork.CostCenterRepository.GetAll();
 
             var model = costCenters.Select(CostCenterViewModel.FromEntity).ToList();
 

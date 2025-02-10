@@ -3,7 +3,6 @@ using FleetControl.Application.Validations;
 using FleetControl.Application.Validations.CustomValidators;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Enums.User;
-using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 

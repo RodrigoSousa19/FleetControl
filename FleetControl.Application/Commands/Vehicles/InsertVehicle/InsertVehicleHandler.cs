@@ -1,7 +1,7 @@
 ﻿using FleetControl.Application.Models;
 using FleetControl.Application.Validations;
 using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Vehicles.InsertVehicle
@@ -9,11 +9,11 @@ namespace FleetControl.Application.Commands.Vehicles.InsertVehicle
     public class InsertVehicleHandler : IRequestHandler<InsertVehicleCommand, ResultViewModel<Vehicle>>
     {
 
-        private readonly IGenericRepository<Vehicle> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public InsertVehicleHandler(IGenericRepository<Vehicle> repository)
+        public InsertVehicleHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel<Vehicle>> Handle(InsertVehicleCommand request, CancellationToken cancellationToken)
@@ -26,7 +26,9 @@ namespace FleetControl.Application.Commands.Vehicles.InsertVehicle
                 .IsLicensePlateValid(request.LicensePlate, ErrorsList.InvalidLicensePlate)
                 .Validate();
 
-            var vehicle = await _repository.Create(request.ToEntity());
+            var vehicle = await _unitOfWork.VehicleRepository.Create(request.ToEntity());
+
+            await _unitOfWork.SaveChangesAsync();
 
             return ResultViewModel<Vehicle>.Success(vehicle);
         }

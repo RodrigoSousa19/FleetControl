@@ -1,28 +1,29 @@
 ﻿using FleetControl.Application.Models;
-using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Vehicles
 {
     public class DeleteMaintenanceHandler : IRequestHandler<DeleteMaintenanceCommand, ResultViewModel>
     {
-        private readonly IGenericRepository<VehicleMaintenance> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteMaintenanceHandler(IGenericRepository<VehicleMaintenance> repository)
+        public DeleteMaintenanceHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel> Handle(DeleteMaintenanceCommand request, CancellationToken cancellationToken)
         {
-            var maintenance = await _repository.GetById(request.Id);
+            var maintenance = await _unitOfWork.VehicleMaintenanceRepository.GetById(request.Id);
 
             if (maintenance is not null)
             {
                 maintenance.SetAsDeleted();
 
-                await _repository.Update(maintenance);
+                await _unitOfWork.VehicleMaintenanceRepository.Update(maintenance);
+
+                await _unitOfWork.SaveChangesAsync();
 
                 return ResultViewModel.Success();
             }

@@ -54,7 +54,7 @@ namespace FleetControl.Infrastructure.Persistence.Repositories
 
         public IGenericRepository<VehicleMaintenance> VehicleMaintenanceRepository { get; }
 
-        public async Task BeginTransactin()
+        public async Task BeginTransactionAsync()
         {
             _transaction = await _context.Database.BeginTransactionAsync();
         }

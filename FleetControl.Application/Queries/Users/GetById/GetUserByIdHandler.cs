@@ -1,7 +1,6 @@
 ﻿using FleetControl.Application.Models;
 using FleetControl.Application.Models.Users;
-using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Queries.Users.GetById
@@ -9,16 +8,16 @@ namespace FleetControl.Application.Queries.Users.GetById
     public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, ResultViewModel<UserViewModel>>
     {
 
-        private readonly IGenericRepository<User> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetUserByIdHandler(IGenericRepository<User> repository)
+        public GetUserByIdHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel<UserViewModel>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            var user = await _repository.GetById(request.Id);
+            var user = await _unitOfWork.UserRepository.GetById(request.Id);
 
             if (user is null)
                 return ResultViewModel<UserViewModel>.Error("Não foi possível localizar o usuário informado.");

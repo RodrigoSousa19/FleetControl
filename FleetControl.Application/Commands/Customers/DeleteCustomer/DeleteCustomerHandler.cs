@@ -1,29 +1,30 @@
 ﻿using FleetControl.Application.Models;
-using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Customers.DeleteCustomer
 {
     public class DeleteCustomerHandler : IRequestHandler<DeleteCustomerCommand, ResultViewModel>
     {
-        private readonly IGenericRepository<Customer> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteCustomerHandler(IGenericRepository<Customer> repository)
+        public DeleteCustomerHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
-            var customer = await _repository.GetById(request.Id);
+            var customer = await _unitOfWork.CustomerRepository.GetById(request.Id);
 
             if (customer is null)
                 return ResultViewModel.Error("Não foi possível encontrar o cliente informado.");
 
             customer.SetAsDeleted();
 
-            await _repository.Update(customer);
+            await _unitOfWork.CustomerRepository.Update(customer);
+
+            await _unitOfWork.SaveChangesAsync();
 
             return ResultViewModel.Success();
         }

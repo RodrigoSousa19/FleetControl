@@ -1,7 +1,6 @@
 ﻿using FleetControl.Application.Models;
 using FleetControl.Application.Validations;
-using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Vehicles.UpdateVehicle
@@ -9,11 +8,11 @@ namespace FleetControl.Application.Commands.Vehicles.UpdateVehicle
     public class UpdateVehicleHandler : IRequestHandler<UpdateVehicleCommand, ResultViewModel>
     {
 
-        private readonly IGenericRepository<Vehicle> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateVehicleHandler(IGenericRepository<Vehicle> repository)
+        public UpdateVehicleHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel> Handle(UpdateVehicleCommand request, CancellationToken cancellationToken)
@@ -26,14 +25,16 @@ namespace FleetControl.Application.Commands.Vehicles.UpdateVehicle
                  .IsLicensePlateValid(request.LicensePlate, ErrorsList.InvalidLicensePlate)
                  .Validate();
 
-            var vehicle = await _repository.GetById(request.IdVehicle);
+            var vehicle = await _unitOfWork.VehicleRepository.GetById(request.IdVehicle);
 
             if (vehicle is null)
                 return ResultViewModel.Error("Não foi possível encontrar o veículo informado.");
 
             vehicle.Update(request.Brand, request.Model, request.FuelType, request.LicensePlate, request.Color, request.MileAge);
 
-            await _repository.Update(vehicle);
+            await _unitOfWork.VehicleRepository.Update(vehicle);
+
+            await _unitOfWork.SaveChangesAsync();
 
             return ResultViewModel.Success();
         }

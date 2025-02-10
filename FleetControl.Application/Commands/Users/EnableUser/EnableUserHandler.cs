@@ -1,6 +1,5 @@
 ﻿using FleetControl.Application.Models;
-using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Users.EnableUser
@@ -8,16 +7,16 @@ namespace FleetControl.Application.Commands.Users.EnableUser
     public class EnableUserHandler : IRequestHandler<EnableUserCommand, ResultViewModel>
     {
 
-        private readonly IGenericRepository<User> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public EnableUserHandler(IGenericRepository<User> repository)
+        public EnableUserHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel> Handle(EnableUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _repository.GetById(request.Id);
+            var user = await _unitOfWork.UserRepository.GetById(request.Id);
 
             if (user is null)
                 return ResultViewModel.Error("Não foi possível encontrar o usuário especificado");
@@ -27,7 +26,9 @@ namespace FleetControl.Application.Commands.Users.EnableUser
 
             user.Enable();
 
-            await _repository.Update(user);
+            await _unitOfWork.UserRepository.Update(user);
+
+            await _unitOfWork.SaveChangesAsync();
 
             return ResultViewModel.Success();
         }

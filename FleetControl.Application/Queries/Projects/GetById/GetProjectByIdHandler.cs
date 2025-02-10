@@ -1,7 +1,6 @@
 ﻿using FleetControl.Application.Models;
 using FleetControl.Application.Models.Projects;
-using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Queries.Projects.GetById
@@ -9,16 +8,16 @@ namespace FleetControl.Application.Queries.Projects.GetById
     public class GetProjectByIdHandler : IRequestHandler<GetProjectByIdQuery, ResultViewModel<ProjectViewModel>>
     {
 
-        private readonly IGenericRepository<Project> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetProjectByIdHandler(IGenericRepository<Project> repository)
+        public GetProjectByIdHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel<ProjectViewModel>> Handle(GetProjectByIdQuery request, CancellationToken cancellationToken)
         {
-            var project = await _repository.GetById(request.Id, includeNavigation: true);
+            var project = await _unitOfWork.ProjectRepository.GetById(request.Id, includeNavigation: true);
 
             if (project is null)
                 return ResultViewModel<ProjectViewModel>.Error("Não foi possível localizar o projeto informado.");

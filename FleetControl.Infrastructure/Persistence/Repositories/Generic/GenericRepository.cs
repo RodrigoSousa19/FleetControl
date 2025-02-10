@@ -22,7 +22,6 @@ namespace FleetControl.Infrastructure.Persistence.Repositories.Generic
         public async Task<T> Create(T item)
         {
             await _dataSet.AddAsync(item);
-            await _context.SaveChangesAsync();
 
             return item;
         }
@@ -59,7 +58,6 @@ namespace FleetControl.Infrastructure.Persistence.Repositories.Generic
         public async Task Update(T item)
         {
             _dataSet.Update(item);
-            await _context.SaveChangesAsync();
         }
 
         private IQueryable<T> ApplyIncludes(IQueryable<T> query, bool recursiveInclude)

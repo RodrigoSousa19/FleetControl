@@ -1,7 +1,6 @@
 ﻿using FleetControl.Application.Models;
-using FleetControl.Core.Entities;
 using FleetControl.Core.Enums.Reservation;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Reservations.FinishReservation
@@ -9,16 +8,16 @@ namespace FleetControl.Application.Commands.Reservations.FinishReservation
     public class FinishReservationHandler : IRequestHandler<FinishReservationCommand, ResultViewModel>
     {
 
-        private readonly IGenericRepository<Reservation> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public FinishReservationHandler(IGenericRepository<Reservation> repository)
+        public FinishReservationHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel> Handle(FinishReservationCommand request, CancellationToken cancellationToken)
         {
-            var reservation = await _repository.GetById(request.Id);
+            var reservation = await _unitOfWork.ReservationRepository.GetById(request.Id);
 
             if (reservation is null)
                 return ResultViewModel.Error("Não foi possível encontrar a reserva especificada.");
@@ -28,7 +27,7 @@ namespace FleetControl.Application.Commands.Reservations.FinishReservation
 
             reservation.FinishReservation();
 
-            await _repository.Update(reservation);
+            await _unitOfWork.ReservationRepository.Update(reservation);
 
             return ResultViewModel.Success();
         }

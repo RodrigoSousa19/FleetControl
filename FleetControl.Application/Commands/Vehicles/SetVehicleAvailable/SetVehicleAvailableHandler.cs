@@ -1,7 +1,6 @@
 ﻿using FleetControl.Application.Models;
-using FleetControl.Core.Entities;
 using FleetControl.Core.Enums.Vehicle;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Vehicles.SetVehicleAvailable
@@ -9,16 +8,16 @@ namespace FleetControl.Application.Commands.Vehicles.SetVehicleAvailable
     public class SetVehicleAvailableHandler : IRequestHandler<SetVehicleAvailableCommand, ResultViewModel>
     {
 
-        private readonly IGenericRepository<Vehicle> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SetVehicleAvailableHandler(IGenericRepository<Vehicle> repository)
+        public SetVehicleAvailableHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel> Handle(SetVehicleAvailableCommand request, CancellationToken cancellationToken)
         {
-            var vehicle = await _repository.GetById(request.Id);
+            var vehicle = await _unitOfWork.VehicleRepository.GetById(request.Id);
 
             if (vehicle is null)
                 return ResultViewModel.Error("Não foi possível encontrar o veiculo especificado");
@@ -28,7 +27,9 @@ namespace FleetControl.Application.Commands.Vehicles.SetVehicleAvailable
 
             vehicle.SetAvailable();
 
-            await _repository.Update(vehicle);
+            await _unitOfWork.VehicleRepository.Update(vehicle);
+
+            await _unitOfWork.SaveChangesAsync();
 
             return ResultViewModel.Success();
         }

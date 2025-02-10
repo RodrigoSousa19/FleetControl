@@ -1,7 +1,6 @@
 ﻿using FleetControl.Application.Models;
 using FleetControl.Application.Models.Vehicles;
-using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Queries.Vehicles.GetAll
@@ -9,16 +8,16 @@ namespace FleetControl.Application.Queries.Vehicles.GetAll
     public class GetAllVehiclesHandler : IRequestHandler<GetAllVehiclesQuery, ResultViewModel<IList<VehicleViewModel>>>
     {
 
-        private readonly IGenericRepository<Vehicle> _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetAllVehiclesHandler(IGenericRepository<Vehicle> repository)
+        public GetAllVehiclesHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel<IList<VehicleViewModel>>> Handle(GetAllVehiclesQuery request, CancellationToken cancellationToken)
         {
-            var vehicles = await _repository.GetAll();
+            var vehicles = await _unitOfWork.VehicleRepository.GetAll();
 
             var model = vehicles.Select(VehicleViewModel.FromEntity).ToList();
 

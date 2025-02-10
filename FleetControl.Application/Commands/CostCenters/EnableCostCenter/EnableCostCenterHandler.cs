@@ -1,21 +1,20 @@
 ﻿using FleetControl.Application.Models;
-using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
 namespace FleetControl.Application.Commands.CostCenters.EnableCostCenter
 {
     public class EnableCostCenterHandler : IRequestHandler<EnableCostCenterCommand, ResultViewModel>
     {
-        private readonly IGenericRepository<CostCenter> _repository;
-        public EnableCostCenterHandler(IGenericRepository<CostCenter> repository)
+        private readonly IUnitOfWork _unitOfWork;
+        public EnableCostCenterHandler(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResultViewModel> Handle(EnableCostCenterCommand request, CancellationToken cancellationToken)
         {
-            var costCenter = await _repository.GetById(request.Id);
+            var costCenter = await _unitOfWork.CostCenterRepository.GetById(request.Id);
 
             if (costCenter is null)
                 return ResultViewModel.Error("Não foi possível encontrar o centro de custo informado.");
@@ -25,7 +24,9 @@ namespace FleetControl.Application.Commands.CostCenters.EnableCostCenter
 
             costCenter.Enable();
 
-            await _repository.Update(costCenter);
+            await _unitOfWork.CostCenterRepository.Update(costCenter);
+
+            await _unitOfWork.SaveChangesAsync();
 
             return ResultViewModel.Success();
         }

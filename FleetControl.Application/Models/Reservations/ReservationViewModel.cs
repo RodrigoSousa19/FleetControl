@@ -36,8 +36,8 @@ namespace FleetControl.Application.Models.Reservations
             var comments = entity.ReservationComments.Select(x => x.Content).ToList();
 
             return new ReservationViewModel(entity.Id,
-                                            entity.Project.Customer.Name,
-                                            entity.Project.CostCenter.Description,
+                                            entity.Project.Customer?.Name,
+                                            entity.Project.CostCenter?.Description,
                                             entity.Driver.User.Name,
                                             entity.Vehicle.Model,
                                             entity.Vehicle.LicensePlate,
