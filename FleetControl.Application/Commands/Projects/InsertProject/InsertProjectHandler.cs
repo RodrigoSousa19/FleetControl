@@ -1,4 +1,5 @@
 ﻿using FleetControl.Application.Models;
+using FleetControl.Application.Validations;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
 using MediatR;
@@ -16,6 +17,10 @@ namespace FleetControl.Application.Commands.Projects.InsertProject
 
         public async Task<ResultViewModel<Project>> Handle(InsertProjectCommand request, CancellationToken cancellationToken)
         {
+            new Validator()
+                .IsNotNullOrEmpty(request.Description, ErrorsList.EmptyDescription)
+                .Validate();
+
             var project = await _repository.Create(request.ToEntity());
 
             return ResultViewModel<Project>.Success(project);

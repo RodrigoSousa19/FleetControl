@@ -1,5 +1,6 @@
 ﻿using FleetControl.Application.Models;
 using FleetControl.Core.Entities;
+using FleetControl.Core.Enums.User;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Drivers.InsertDriver
@@ -8,7 +9,7 @@ namespace FleetControl.Application.Commands.Drivers.InsertDriver
     {
         public int IdUser { get; set; }
         public string DocumentNumber { get; set; }
-        public string DocumentType { get; set; }
+        public DocumentType DocumentType { get; set; }
 
         public Driver ToEntity() => new(IdUser, DocumentNumber, DocumentType);
     }

@@ -1,4 +1,6 @@
 ﻿using FleetControl.Application.Models;
+using FleetControl.Application.Validations;
+using FleetControl.Application.Validations.CustomValidators;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
 using MediatR;
@@ -20,6 +22,11 @@ namespace FleetControl.Application.Commands.Customers.UpdateCustomer
 
             if (customer is null)
                 return ResultViewModel.Error("Não foi possível encontrar o cliente informado.");
+
+            new Validator()
+                .ProveCustomValidation(new CnpjValidator(request.Cnpj), ErrorsList.InvalidCnpj)
+                .IsEmailValid(request.Email, ErrorsList.InvalidEmail)
+                .Validate();
 
             customer.Update(request.Name, request.Address, request.Contact, request.Cnpj, request.Email);
 

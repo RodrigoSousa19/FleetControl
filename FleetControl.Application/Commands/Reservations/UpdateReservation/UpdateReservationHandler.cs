@@ -1,4 +1,5 @@
 ﻿using FleetControl.Application.Models;
+using FleetControl.Application.Validations;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
 using MediatR;
@@ -16,6 +17,10 @@ namespace FleetControl.Application.Commands.Reservations.UpdateReservation
 
         public async Task<ResultViewModel> Handle(UpdateReservationCommand request, CancellationToken cancellationToken)
         {
+            new Validator()
+                .IsValidDateRange(request.StartDate, request.EndDate, ErrorsList.InvalidDateRange)
+                .Validate();
+
             var reservation = await _repository.GetById(request.IdReservation);
 
             if (reservation is null)

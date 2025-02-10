@@ -1,4 +1,5 @@
 ﻿using FleetControl.Application.Models;
+using FleetControl.Application.Validations;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
 using MediatR;
@@ -17,6 +18,8 @@ namespace FleetControl.Application.Commands.Users.UpdateUser
 
         public async Task<ResultViewModel> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
+            new Validator().IsNotNullOrEmpty(request.Name, ErrorsList.InvalidUserName).IsEmailValid(request.Email, ErrorsList.InvalidEmail).Validate();
+
             var user = await _repository.GetById(request.IdUser);
 
             if (user is null)

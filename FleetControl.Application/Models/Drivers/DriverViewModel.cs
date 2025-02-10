@@ -25,7 +25,7 @@ namespace FleetControl.Application.Models.Drivers
         {
             var driverProjects = entity.DriverProjects.Select(x => x.Project.Name).ToList();
 
-            return new DriverViewModel(entity.Id, entity.User?.Name, entity.DocumentNumber, entity.DocumentType, entity.Enabled, driverProjects);
+            return new DriverViewModel(entity.Id, entity.User?.Name, entity.DocumentNumber, entity.GetDocumentDescription(), entity.Enabled, driverProjects);
         }
     }
 }

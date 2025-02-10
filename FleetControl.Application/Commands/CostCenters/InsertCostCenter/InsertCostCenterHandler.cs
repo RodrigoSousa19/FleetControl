@@ -16,7 +16,7 @@ namespace FleetControl.Application.Commands.CostCenters.InsertCostCenter
         public async Task<ResultViewModel<CostCenter>> Handle(InsertCostCenterCommand request, CancellationToken cancellationToken)
         {
             new Validator()
-                .IsNotNullOrEmpty(request.Description, ErrorsList.InvalidDescription)
+                .IsNotNullOrEmpty(request.Description, ErrorsList.EmptyDescription)
                 .Validate();
 
             var costCenter = await _repository.Create(request.ToEntity());

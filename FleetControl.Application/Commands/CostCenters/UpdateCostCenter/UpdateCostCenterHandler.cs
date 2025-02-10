@@ -1,4 +1,5 @@
 ﻿using FleetControl.Application.Models;
+using FleetControl.Application.Validations;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
 using MediatR;
@@ -19,6 +20,10 @@ namespace FleetControl.Application.Commands.CostCenters.UpdateCostCenter
 
             if (costCenter is null)
                 return ResultViewModel.Error("Não foi possível encontrar o centro de custo informado.");
+
+            new Validator()
+                .IsNotNullOrEmpty(request.Description, ErrorsList.EmptyDescription)
+                .Validate();
 
             costCenter.Update(request.Description);
 

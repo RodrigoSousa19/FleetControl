@@ -1,4 +1,5 @@
 ﻿using FleetControl.Application.Models;
+using FleetControl.Application.Validations;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
 using MediatR;
@@ -16,6 +17,12 @@ namespace FleetControl.Application.Commands.Vehicles
 
         public async Task<ResultViewModel> Handle(UpdateMaintenanceCommand request, CancellationToken cancellationToken)
         {
+            new Validator()
+            .IsGreaterThanZero(request.TotalCost, ErrorsList.InvalidTotalCostValue)
+            .IsValidDateRange(request.StartDate, request.EndDate, ErrorsList.InvalidDateRange)
+            .IsNotNullOrEmpty(request.Description, ErrorsList.EmptyDescription)
+            .Validate();
+
             var maintenance = await _repository.GetById(request.Id);
 
             if (maintenance is not null)

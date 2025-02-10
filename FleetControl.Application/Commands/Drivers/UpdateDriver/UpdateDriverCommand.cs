@@ -1,4 +1,5 @@
 ﻿using FleetControl.Application.Models;
+using FleetControl.Core.Enums.User;
 using MediatR;
 
 namespace FleetControl.Application.Commands.Drivers.UpdateDriver
@@ -7,6 +8,6 @@ namespace FleetControl.Application.Commands.Drivers.UpdateDriver
     {
         public int IdDriver { get; set; }
         public string DocumentNumber { get; set; }
-        public string DocumentType { get; set; }
+        public DocumentType DocumentType { get; set; }
     }
 }
