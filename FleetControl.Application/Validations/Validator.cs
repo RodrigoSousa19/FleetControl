@@ -150,7 +150,7 @@ namespace FleetControl.Application.Validations
                     var startDateAfterEndDate = start > end;
                     var endDateBeforeStartDate = end < start;
 
-                    return startDateAfterEndDate || endDateBeforeStartDate;
+                    return !startDateAfterEndDate || !endDateBeforeStartDate;
                 }
                 return false;
 
