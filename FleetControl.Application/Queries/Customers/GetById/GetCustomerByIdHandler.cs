@@ -1,7 +1,5 @@
 ﻿using FleetControl.Application.Models;
 using FleetControl.Application.Models.Customers;
-using FleetControl.Core.Entities;
-using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using MediatR;
 
