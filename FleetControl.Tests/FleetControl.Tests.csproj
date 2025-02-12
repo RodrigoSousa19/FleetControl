@@ -30,19 +30,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\CostCenter\" />
-    <Folder Include="Application\Customer\" />
-    <Folder Include="Application\Driver\DriverProjects\" />
-    <Folder Include="Application\Project\" />
-    <Folder Include="Application\Reservation\ReservationComment\" />
-    <Folder Include="Application\User\" />
-    <Folder Include="Application\Vehicle\VehicleMaintenance\" />
-    <Folder Include="Core\CostCenter\" />
-    <Folder Include="Core\Customer\" />
-    <Folder Include="Core\Driver\DriverProjects\" />
-    <Folder Include="Core\Reservation\ReservationComment\" />
-    <Folder Include="Core\User\" />
-    <Folder Include="Core\Project\" />
+    <Folder Include="Application\Customers\" />
+    <Folder Include="Application\Drivers\DriverProjects\" />
+    <Folder Include="Application\Projects\" />
+    <Folder Include="Application\Reservations\ReservationComments\" />
+    <Folder Include="Application\Users\" />
+    <Folder Include="Application\Vehicles\VehicleMaintenance\" />
   </ItemGroup>
 
   <ItemGroup>
