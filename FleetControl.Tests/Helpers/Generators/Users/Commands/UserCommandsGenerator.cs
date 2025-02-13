@@ -1,0 +1,37 @@
+﻿using Bogus;
+using FleetControl.Application.Commands.Users.DeleteUser;
+using FleetControl.Application.Commands.Users.DisableUser;
+using FleetControl.Application.Commands.Users.EnableUser;
+using FleetControl.Application.Commands.Users.InsertUser;
+using FleetControl.Application.Commands.Users.UpdateUser;
+
+namespace FleetControl.Tests.Helpers.Generators.Users.Commands
+{
+    public class UserCommandsGenerator : CommandsGeneratorBase
+    {
+        private readonly Faker<InsertUserCommand> _insertCommandFaker = new Faker<InsertUserCommand>()
+            .RuleFor(u => u.Name, f => f.Person.FullName)
+            .RuleFor(u => u.Email, f => f.Person.Email);
+
+        private readonly Faker<UpdateUserCommand> _updateCommandFaker = new Faker<UpdateUserCommand>()
+            .RuleFor(u => u.IdUser, f => f.Random.Int(1, 100))
+            .RuleFor(u => u.Name, f => f.Person.FullName)
+            .RuleFor(u => u.Email, f => f.Person.Email);
+
+        private readonly Faker<DeleteUserCommand> _deleteCommandFaker = new Faker<DeleteUserCommand>().CustomInstantiator(f => new DeleteUserCommand(f.Random.Int(1, 100)));
+        private readonly Faker<EnableUserCommand> _enableCommandFaker = new Faker<EnableUserCommand>().CustomInstantiator(f => new EnableUserCommand(f.Random.Int(1, 100)));
+        private readonly Faker<DisableUserCommand> _disableCommandFaker = new Faker<DisableUserCommand>().CustomInstantiator(f => new DisableUserCommand(f.Random.Int(1, 100)));
+
+        public UserCommandsGenerator()
+        {
+            Commands = new Dictionary<CommandType, object>()
+            {
+                { CommandType.Insert, _insertCommandFaker },
+                { CommandType.Update, _updateCommandFaker },
+                { CommandType.Delete, _deleteCommandFaker },
+                { CommandType.Enable, _enableCommandFaker },
+                { CommandType.Disable, _disableCommandFaker }
+            };
+        }
+    }
+}

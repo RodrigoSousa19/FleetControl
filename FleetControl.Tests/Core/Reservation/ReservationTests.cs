@@ -71,7 +71,7 @@ namespace FleetControl.Tests.Core.Reservation
 
             reservation.Status.Should().Be(ReservationStatus.Finished);
         }
-        
+
         [Fact]
         public void ReservationIsFinished_Cancel_StatusDontChange()
         {

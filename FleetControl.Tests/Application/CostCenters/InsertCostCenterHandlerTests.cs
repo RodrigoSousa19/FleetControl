@@ -6,7 +6,6 @@ using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
 using MediatR;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 
 namespace FleetControl.Tests.Application.CostCenterTests
 {
@@ -14,7 +13,7 @@ namespace FleetControl.Tests.Application.CostCenterTests
     {
         private readonly CostCenterGenerator _generator = new CostCenterGenerator();
         private readonly CostCenterCommandsGenerator _commandGenerator = new CostCenterCommandsGenerator();
-        
+
         [Fact]
         public async Task InputDataAreOk_Insert_Success()
         {
@@ -40,7 +39,7 @@ namespace FleetControl.Tests.Application.CostCenterTests
 
             var command = new InsertCostCenterCommand
             {
-                Description = "" 
+                Description = ""
             };
 
             var handler = new InsertCostCenterHandler(unitOfWork);

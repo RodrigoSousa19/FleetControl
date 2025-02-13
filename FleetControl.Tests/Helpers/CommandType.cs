@@ -6,6 +6,12 @@
         Update,
         Delete,
         Disable,
-        Enable
+        Enable,
+        Cancel,
+        Confirm,
+        Finish,
+        SetAvailable,
+        SetReserved,
+        Start
     }
 }
