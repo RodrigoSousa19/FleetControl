@@ -8,7 +8,7 @@ using FleetControl.Application.Commands.Customers.UpdateCustomer;
 
 namespace FleetControl.Tests.Helpers.Generators.Customers.Commands
 {
-    public class CustomerCommands : CommandsGeneratorBase
+    public class CustomerCommandsGenerator : CommandsGeneratorBase
     {
         private readonly Faker<InsertCustomerCommand> _insertCommandFaker = new Faker<InsertCustomerCommand>()
             .RuleFor(c => c.Address, f => f.Address.FullAddress())
@@ -34,7 +34,7 @@ namespace FleetControl.Tests.Helpers.Generators.Customers.Commands
         private readonly Faker<DisableCustomerCommand> _disableCommandFaker = new Faker<DisableCustomerCommand>()
             .CustomInstantiator(f => new DisableCustomerCommand(f.Random.Int(1, 100)));
 
-        public CustomerCommands()
+        public CustomerCommandsGenerator()
         {
             Commands = new Dictionary<CommandType, object>()
             {

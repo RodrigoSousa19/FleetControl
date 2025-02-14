@@ -2,6 +2,7 @@
 using FleetControl.Core.Entities;
 using FleetControl.Core.Exceptions;
 using FleetControl.Infrastructure.Persistence.Repositories;
+using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
 using MediatR;
@@ -11,8 +12,7 @@ namespace FleetControl.Tests.Application.CostCenterTests
 {
     public class InsertCostCenterHandlerTests
     {
-        private readonly CostCenterGenerator _generator = new CostCenterGenerator();
-        private readonly CostCenterCommandsGenerator _commandGenerator = new CostCenterCommandsGenerator();
+        private readonly GeneratorsWork _generatorsWork = new GeneratorsWork();
 
         [Fact]
         public async Task InputDataAreOk_Insert_Success()
@@ -20,7 +20,7 @@ namespace FleetControl.Tests.Application.CostCenterTests
             var unitOfWork = Substitute.For<IUnitOfWork>();
             var mediator = Substitute.For<IMediator>();
 
-            var command = _commandGenerator.Commands[Helpers.CommandType.Insert] as InsertCostCenterCommand;
+            var command = _generatorsWork.CostCenterCommandsGenerator.Commands[Helpers.CommandType.Insert] as InsertCostCenterCommand;
 
             var handler = new InsertCostCenterHandler(unitOfWork);
 
