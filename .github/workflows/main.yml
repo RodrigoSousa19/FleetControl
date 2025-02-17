@@ -31,9 +31,16 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            echo "Configurando SSH no servidor..."
+            mkdir -p ~/.ssh
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+
             echo "Adicionando GitHub como host confiável..."
             ssh-keyscan github.com >> ~/.ssh/known_hosts
-      
+            chmod 600 ~/.ssh/known_hosts
+            
             cd ${{ secrets.PROJECT_DIRECTORY }}
 
             if [ "$(docker ps -q -f name=minha-api-container)" ]; then
