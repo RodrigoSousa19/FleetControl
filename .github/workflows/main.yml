@@ -43,7 +43,7 @@ jobs:
             
             if [ ! -d ".git" ]; then
               echo "Repositório Git não encontrado, clonando..."
-              git clone https://github.com/RodrigoSousa19/FleetControl.
+              git clone git@github.com:RodrigoSousa19/FleetControl.git
             fi
             
             echo "Atualizando código da API..."
