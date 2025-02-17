@@ -1,4 +1,4 @@
-name: Deploy FleetControl
+name: FleetControl
 
 on:
   push:
@@ -6,47 +6,55 @@ on:
       - master
 
 jobs:
-  deploy:
+  build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Clonar o repositório
+        uses: actions/checkout@v4
 
-    - name: Set up SSH
-      run: |
-        echo "Creating .ssh directory..."
-        mkdir -p ~/.ssh
-        echo "Adding private key to ~/.ssh/id_rsa..."
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        echo "Setting permissions for private key..."
-        chmod 600 ~/.ssh/id_rsa
-        echo "Adding server to known_hosts..."
-        ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
-    
-        echo "Starting SSH agent..."
-        eval "$(ssh-agent -s)"
-        echo "Adding private key to agent..."
-        ssh-add ~/.ssh/id_rsa
-    
-        echo "Testing SSH directory structure..."
-        ls -la ~/.ssh
-    
-        echo "Testing SSH connection..."
-        ssh -v ${{ secrets.SERVER_USER }}@${{ secrets.SSH_HOST }} 'echo "SSH connection successful"'
-    
-    - name: Deploy application
-      run: |
-        ssh ${{ secrets.SERVER_USER }}@${{ secrets.SSH_HOST }} << EOF
-          echo "Navigating to project directory..."
-          cd ${{ secrets.PROJECT_DIRECTORY }}
+      - name: Configurar o .NET 8
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0'
 
-          echo "Stopping existing container..."
-          docker-compose down
+      - name: Restaurar dependências
+        run: dotnet restore
 
-          echo "Updating code from Git..."
-          git pull origin master
+      - name: Build da API
+        run: dotnet build --configuration Release --no-restore
 
-          echo "Rebuilding and starting container..."
-          docker-compose up --build -d
-        EOF
+      - name: Acessar o Servidor via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "Configurando SSH no servidor..."
+            mkdir -p ~/.ssh
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+
+            echo "Adicionando GitHub como host confiável..."
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+            chmod 600 ~/.ssh/known_hosts
+            
+            cd ${{ secrets.PROJECT_DIRECTORY }}
+
+            if [ "$(docker ps -q -f name=minha-api-container)" ]; then
+              echo "Parando e removendo container existente..."
+              docker-compose down
+            fi
+            
+            if [ ! -d ".git" ]; then
+              echo "Repositório Git não encontrado, clonando..."
+              git clone git@github.com:RodrigoSousa19/FleetControl.git
+            fi
+            
+            echo "Atualizando código da API..."
+            git pull origin master
+
+            echo "Subindo container..."
+            docker-compose up --build -d
