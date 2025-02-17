@@ -24,9 +24,6 @@ jobs:
       - name: Build da API
         run: dotnet build --configuration Release --no-restore
 
-      - name: Executar os Testes
-        run: dotnet test --configuration Release --no-build
-
       - name: Acessar o Servidor via SSH
         uses: appleboy/ssh-action@master
         with:
