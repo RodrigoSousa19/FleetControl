@@ -1,4 +1,4 @@
-name: FleetControl
+name: Deploy FleetControl
 
 on:
   push:
@@ -6,47 +6,47 @@ on:
       - master
 
 jobs:
-  build_and_deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clonar o repositório
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Configurar o .NET 8
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '8.0'
-
-      - name: Restaurar dependências
-        run: dotnet restore
-
-      - name: Build da API
-        run: dotnet build --configuration Release --no-restore
-
-      - name: Set up SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
-      
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_rsa
-      
-          ls -la ~/.ssh
-      
-          ssh -v ${{ secrets.SERVER_USER }}@${{ secrets.SSH_HOST }} 'echo "SSH connection successful"'
-      - name: Deploy application
-        run: |
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SSH_HOST }} << EOF
-
+    - name: Set up SSH
+      run: |
+        echo "Creating .ssh directory..."
+        mkdir -p ~/.ssh
+        echo "Adding private key to ~/.ssh/id_rsa..."
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        echo "Setting permissions for private key..."
+        chmod 600 ~/.ssh/id_rsa
+        echo "Adding server to known_hosts..."
+        ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+    
+        echo "Starting SSH agent..."
+        eval "$(ssh-agent -s)"
+        echo "Adding private key to agent..."
+        ssh-add ~/.ssh/id_rsa
+    
+        echo "Testing SSH directory structure..."
+        ls -la ~/.ssh
+    
+        echo "Testing SSH connection..."
+        ssh -v ${{ secrets.SERVER_USER }}@${{ secrets.SSH_HOST }} 'echo "SSH connection successful"'
+    
+    - name: Deploy application
+      run: |
+        ssh ${{ secrets.SERVER_USER }}@${{ secrets.SSH_HOST }} << EOF
+          echo "Navigating to project directory..."
           cd ${{ secrets.PROJECT_DIRECTORY }}
 
+          echo "Stopping existing container..."
           docker-compose down
 
+          echo "Updating code from Git..."
           git pull origin master
 
+          echo "Rebuilding and starting container..."
           docker-compose up --build -d
-          EOF
-          
+        EOF
