@@ -2,6 +2,7 @@
 using FleetControl.Core.Entities;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
+using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
 using MediatR;
 using NSubstitute;
@@ -11,17 +12,23 @@ namespace FleetControl.Tests.Application.CostCenters
     public class UpdateCostCenterHandlerTests
     {
         private readonly GeneratorsWork _generatorsWork = new GeneratorsWork();
+        private readonly CostCenterGenerator _entityGenerator = new CostCenterGenerator();
 
         [Fact]
-        public async Task InputDataAreOk_Update_Success()
+        public async Task CostCenterExists_Update_Success()
         {
+            var costCenter = _entityGenerator.Generate();
+
             var unitOfWork = Substitute.For<IUnitOfWork>();
             var mediator = Substitute.For<IMediator>();
 
-            var command = _generatorsWork.CostCenterCommandsGenerator.Commands[Helpers.CommandType.Update] as UpdateCostCenterCommand;
+            unitOfWork.CostCenterRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)costCenter));
+            unitOfWork.CostCenterRepository.Update(Arg.Any<CostCenter>()).Returns(Task.CompletedTask);
 
             var handler = new UpdateCostCenterHandler(unitOfWork);
 
+            var command = _generatorsWork.CostCenterCommandsGenerator.Commands[Helpers.CommandType.Update] as UpdateCostCenterCommand;
+            
             var result = await handler.Handle(command, new CancellationToken());
 
             result.IsSuccess.Should().BeTrue();
