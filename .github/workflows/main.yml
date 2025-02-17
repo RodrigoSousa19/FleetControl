@@ -1,0 +1,48 @@
+name: FleetControl
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar o repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar o .NET 8
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0'
+
+      - name: Restaurar dependências
+        run: dotnet restore
+
+      - name: Build da API
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Executar os Testes
+        run: dotnet test --configuration Release --no-build
+
+      - name: Acessar o Servidor via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secretes.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ${{ secrets.PROJECT_DIRECTORY }}
+
+            if [ "$(docker ps -q -f name=minha-api-container)" ]; then
+              echo "Parando e removendo container existente..."
+              docker-compose down
+            fi
+
+            echo "Atualizando código da API..."
+            git pull origin master
+
+            echo "Subindo container..."
+            docker-compose up --build -d
