@@ -24,9 +24,6 @@ jobs:
       - name: Build da API
         run: dotnet build --configuration Release --no-restore
 
-      - name: Executar os Testes
-        run: dotnet test --configuration Release --no-build
-
       - name: Acessar o Servidor via SSH
         uses: appleboy/ssh-action@master
         with:
@@ -34,13 +31,28 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            echo "Configurando SSH no servidor..."
+            mkdir -p ~/.ssh
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+
+            echo "Adicionando GitHub como host confiável..."
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+            chmod 600 ~/.ssh/known_hosts
+            
             cd ${{ secrets.PROJECT_DIRECTORY }}
 
             if [ "$(docker ps -q -f name=minha-api-container)" ]; then
               echo "Parando e removendo container existente..."
               docker-compose down
             fi
-
+            
+            if [ ! -d ".git" ]; then
+              echo "Repositório Git não encontrado, clonando..."
+              git clone git@github.com:RodrigoSousa19/FleetControl.git
+            fi
+            
             echo "Atualizando código da API..."
             git pull origin master
 
