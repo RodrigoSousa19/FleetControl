@@ -40,7 +40,12 @@ jobs:
               echo "Parando e removendo container existente..."
               docker-compose down
             fi
-
+            
+            if [ ! -d ".git" ]; then
+              echo "Repositório Git não encontrado, clonando..."
+              git clone https://github.com/RodrigoSousa19/FleetControl.
+            fi
+            
             echo "Atualizando código da API..."
             git pull origin master
 
