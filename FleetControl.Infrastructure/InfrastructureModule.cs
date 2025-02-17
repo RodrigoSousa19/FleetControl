@@ -21,7 +21,7 @@ namespace FleetControl.Infrastructure
 
         private static IServiceCollection AddData(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("FleetControl");
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<FleetControlDbContext>(o => o.UseSqlServer(connectionString));
 
             return services;
