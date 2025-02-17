@@ -24,37 +24,29 @@ jobs:
       - name: Build da API
         run: dotnet build --configuration Release --no-restore
 
-      - name: Acessar o Servidor via SSH
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            echo "Configurando SSH no servidor..."
-            mkdir -p ~/.ssh
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
-            ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+      
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
+      
+          ls -la ~/.ssh
+      
+          ssh -v ${{ secrets.SERVER_USER }}@${{ secrets.SSH_HOST }} 'echo "SSH connection successful"'
+      - name: Deploy application
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SSH_HOST }} << EOF
 
-            echo "Adicionando GitHub como host confiável..."
-            ssh-keyscan github.com >> ~/.ssh/known_hosts
-            chmod 600 ~/.ssh/known_hosts
-            
-            cd ${{ secrets.PROJECT_DIRECTORY }}
+          cd ${{ secrets.PROJECT_DIRECTORY }}
 
-            if [ "$(docker ps -q -f name=minha-api-container)" ]; then
-              echo "Parando e removendo container existente..."
-              docker-compose down
-            fi
-            
-            if [ ! -d ".git" ]; then
-              echo "Repositório Git não encontrado, clonando..."
-              git clone git@github.com:RodrigoSousa19/FleetControl.git
-            fi
-            
-            echo "Atualizando código da API..."
-            git pull origin master
+          docker-compose down
 
-            echo "Subindo container..."
-            docker-compose up --build -d
+          git pull origin master
+
+          docker-compose up --build -d
+          EOF
+          
