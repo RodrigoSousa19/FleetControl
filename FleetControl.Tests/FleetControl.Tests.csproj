@@ -10,6 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Application\Drivers\DriverProjects\**" />
+    <EmbeddedResource Remove="Application\Drivers\DriverProjects\**" />
+    <None Remove="Application\Drivers\DriverProjects\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Bogus" Version="35.6.1" />
     <PackageReference Include="coverlet.collector" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
@@ -31,7 +37,6 @@
 
   <ItemGroup>
     <Folder Include="Application\Customers\" />
-    <Folder Include="Application\Drivers\DriverProjects\" />
     <Folder Include="Application\Projects\" />
     <Folder Include="Application\Reservations\ReservationComments\" />
     <Folder Include="Application\Users\" />
