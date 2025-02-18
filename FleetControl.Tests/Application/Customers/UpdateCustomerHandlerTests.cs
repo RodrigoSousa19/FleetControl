@@ -1,12 +1,11 @@
-﻿using FleetControl.Application.Commands.CostCenters.UpdateCostCenter;
+﻿using FleetControl.Application.Commands.Customers.UpdateCustomer;
 using FleetControl.Core.Entities;
 using FleetControl.Infrastructure.Persistence.Repositories;
-using FleetControl.Tests.Helpers.Generators;
 using FleetControl.Tests.Helpers;
+using FleetControl.Tests.Helpers.Generators;
+using FluentAssertions;
 using MediatR;
 using NSubstitute;
-using FluentAssertions;
-using FleetControl.Application.Commands.Customers.UpdateCustomer;
 
 namespace FleetControl.Tests.Application.Customers
 {
