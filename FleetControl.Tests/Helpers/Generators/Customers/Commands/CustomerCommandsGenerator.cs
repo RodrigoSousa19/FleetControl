@@ -14,7 +14,7 @@ namespace FleetControl.Tests.Helpers.Generators.Customers.Commands
             .RuleFor(c => c.Address, f => f.Address.FullAddress())
             .RuleFor(c => c.Cnpj, f => f.Company.Cnpj())
             .RuleFor(c => c.Contact, f => f.Phone.PhoneNumber("(##) #####-####"))
-            .RuleFor(c => c.Email, f => f.Internet.Email(provider: "Mail"))
+            .RuleFor(c => c.Email, f => f.Internet.Email())
             .RuleFor(c => c.Name, f => f.Company.CompanyName());
 
         private readonly Faker<UpdateCustomerCommand> _updateCommandFaker = new Faker<UpdateCustomerCommand>()
@@ -22,7 +22,7 @@ namespace FleetControl.Tests.Helpers.Generators.Customers.Commands
             .RuleFor(c => c.Address, f => f.Address.FullAddress())
             .RuleFor(c => c.Cnpj, f => f.Company.Cnpj())
             .RuleFor(c => c.Contact, f => f.Phone.PhoneNumber("(##) #####-####"))
-            .RuleFor(c => c.Email, f => f.Internet.Email(provider: "Mail"))
+            .RuleFor(c => c.Email, f => f.Internet.Email())
             .RuleFor(c => c.Name, f => f.Company.CompanyName());
 
         private readonly Faker<DeleteCustomerCommand> _deleteCommandFaker = new Faker<DeleteCustomerCommand>()

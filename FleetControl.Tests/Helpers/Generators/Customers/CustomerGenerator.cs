@@ -12,7 +12,7 @@ namespace FleetControl.Tests.Helpers.Generators
                 f.Address.StreetAddress(),
                 f.Phone.PhoneNumber("(##) #####-####"),
                 f.Company.Cnpj(),
-                f.Internet.Email(provider: "Mail")
+                f.Internet.Email()
             )))
         { }
     }
