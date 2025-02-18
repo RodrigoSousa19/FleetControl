@@ -38,11 +38,11 @@ namespace FleetControl.Tests.Helpers.Generators.Customers.Commands
         {
             Commands = new Dictionary<CommandType, object>()
             {
-                { CommandType.Insert, _insertCommandFaker },
-                { CommandType.Update, _updateCommandFaker},
-                { CommandType.Delete, _deleteCommandFaker },
-                { CommandType.Enable, _enableCommandFaker },
-                { CommandType.Disable, _disableCommandFaker }
+                { CommandType.Insert, _insertCommandFaker.Generate() },
+                { CommandType.Update, _updateCommandFaker.Generate()},
+                { CommandType.Delete, _deleteCommandFaker.Generate() },
+                { CommandType.Enable, _enableCommandFaker.Generate() },
+                { CommandType.Disable, _disableCommandFaker.Generate() }
             };
         }
     }

@@ -49,13 +49,13 @@ namespace FleetControl.Tests.Helpers.Generators.Vehicles.Commands
         {
             Commands = new Dictionary<CommandType, object>()
             {
-                { CommandType.Insert, _insertCommandFaker },
-                { CommandType.Update, _updateCommandFaker },
-                { CommandType.Delete, _deleteCommandFaker },
-                { CommandType.Enable, _enableCommandFaker },
-                { CommandType.Disable, _disableCommandFaker},
-                { CommandType.SetReserved, _reserveCommandFaker },
-                { CommandType.SetAvailable, _availableCommandFaker }
+                { CommandType.Insert, _insertCommandFaker.Generate() },
+                { CommandType.Update, _updateCommandFaker.Generate() },
+                { CommandType.Delete, _deleteCommandFaker.Generate() },
+                { CommandType.Enable, _enableCommandFaker.Generate() },
+                { CommandType.Disable, _disableCommandFaker.Generate()},
+                { CommandType.SetReserved, _reserveCommandFaker.Generate() },
+                { CommandType.SetAvailable, _availableCommandFaker.Generate() }
             };
         }
     }

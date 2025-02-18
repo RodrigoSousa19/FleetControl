@@ -17,8 +17,8 @@ namespace FleetControl.Tests.Helpers.Generators.Reservations.ReservationComment.
         {
             Commands = new Dictionary<CommandType, object>()
                 {
-                    { CommandType.Insert, _insertCommandFaker },
-                    { CommandType.Delete, _deleteCommandFaker }
+                    { CommandType.Insert, _insertCommandFaker.Generate() },
+                    { CommandType.Delete, _deleteCommandFaker.Generate() }
                 };
         }
     }

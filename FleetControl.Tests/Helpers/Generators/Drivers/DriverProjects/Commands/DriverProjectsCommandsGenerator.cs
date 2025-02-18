@@ -20,9 +20,9 @@ namespace FleetControl.Tests.Helpers.Generators.Drivers.DriverProjects.Commands
         {
             Commands = new Dictionary<CommandType, object>()
             {
-                { CommandType.Insert, _insertCommandFaker },
-                { CommandType.Update, _updateCommandFaker },
-                { CommandType.Delete, _deleteCommandFaker }
+                { CommandType.Insert, _insertCommandFaker.Generate() },
+                { CommandType.Update, _updateCommandFaker.Generate() },
+                { CommandType.Delete, _deleteCommandFaker.Generate() }
             };
         }
     }

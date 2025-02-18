@@ -33,12 +33,12 @@ namespace FleetControl.Tests.Helpers.Generators.Reservations.Commands
         {
             Commands = new Dictionary<CommandType, object>()
             {
-                { CommandType.Insert, _insertCommandFaker },
-                { CommandType.Update, _updateCommandFaker },
-                { CommandType.Delete, _deleteCommandFaker },
-                { CommandType.Cancel, _cancelCommandFaker },
-                { CommandType.Confirm, _confirmCommandFaker },
-                { CommandType.Finish, _finishCommandFaker }
+                { CommandType.Insert, _insertCommandFaker.Generate() },
+                { CommandType.Update, _updateCommandFaker.Generate() },
+                { CommandType.Delete, _deleteCommandFaker.Generate() },
+                { CommandType.Cancel, _cancelCommandFaker.Generate() },
+                { CommandType.Confirm, _confirmCommandFaker.Generate() },
+                { CommandType.Finish, _finishCommandFaker.Generate() }
             };
         }
     }

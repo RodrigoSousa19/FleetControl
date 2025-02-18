@@ -34,12 +34,12 @@ namespace FleetControl.Tests.Helpers.Generators.Vehicles.VehicleMaintenance.Comm
         {
             Commands = new Dictionary<CommandType, object>()
             {
-                { CommandType.Insert, _insertCommandFaker },
-                { CommandType.Update, _updateCommandFaker },
-                { CommandType.Delete, _deleteCommandFaker },
-                { CommandType.Cancel, _cancelCommandFaker },
-                { CommandType.Finish, _finishCommandFaker },
-                { CommandType.Start, _startCommandFaker }
+                { CommandType.Insert, _insertCommandFaker.Generate() },
+                { CommandType.Update, _updateCommandFaker.Generate() },
+                { CommandType.Delete, _deleteCommandFaker.Generate() },
+                { CommandType.Cancel, _cancelCommandFaker.Generate() },
+                { CommandType.Finish, _finishCommandFaker.Generate() },
+                { CommandType.Start, _startCommandFaker.Generate() }
             };
         }
     }
