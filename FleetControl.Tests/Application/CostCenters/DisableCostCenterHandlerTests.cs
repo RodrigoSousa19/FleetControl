@@ -1,5 +1,4 @@
-﻿using FleetControl.Application.Commands.CostCenters.DeleteCostCenter;
-using FleetControl.Application.Commands.CostCenters.DisableCostCenter;
+﻿using FleetControl.Application.Commands.CostCenters.DisableCostCenter;
 using FleetControl.Core.Entities;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
