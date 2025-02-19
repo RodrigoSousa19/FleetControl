@@ -1,3 +1,4 @@
+using DotNetEnv;
 using FleetControl.API.ExceptionsHandler;
 using FleetControl.Application;
 using FleetControl.Infrastructure;
@@ -8,6 +9,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+Env.TraversePath().Load();
 
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
