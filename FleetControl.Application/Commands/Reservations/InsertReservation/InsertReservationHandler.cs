@@ -29,7 +29,7 @@ namespace FleetControl.Application.Commands.Reservations.InsertReservation
             if (vehicle is null)
                 return ResultViewModel<Reservation>.Error("Não foi possível encontrar o veículo especificado.");
 
-            var project = await _unitOfWork.VehicleRepository.GetById(request.IdProject);
+            var project = await _unitOfWork.ProjectRepository.GetById(request.IdProject);
             if (project is null)
                 return ResultViewModel<Reservation>.Error("Não foi possível encontrar o projeto especificado.");
 
