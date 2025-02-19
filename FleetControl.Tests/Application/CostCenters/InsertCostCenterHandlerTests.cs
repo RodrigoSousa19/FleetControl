@@ -5,7 +5,6 @@ using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FluentAssertions;
-using MediatR;
 using NSubstitute;
 
 namespace FleetControl.Tests.Application.CostCenterTests

@@ -5,8 +5,8 @@ using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
-using MediatR;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 namespace FleetControl.Tests.Application.Projects
 {
@@ -48,7 +48,7 @@ namespace FleetControl.Tests.Application.Projects
             var unitOfWork = Substitute.For<IUnitOfWork>();
             unitOfWork.ProjectRepository.Returns(repository);
 
-            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)null));
+            repository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var handler = new EnableProjectHandler(unitOfWork);
 

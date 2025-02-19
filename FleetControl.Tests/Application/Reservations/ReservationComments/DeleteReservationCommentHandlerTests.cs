@@ -5,8 +5,8 @@ using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
-using MediatR;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 namespace FleetControl.Tests.Application.Reservations.ReservationComments
 {
@@ -47,7 +47,7 @@ namespace FleetControl.Tests.Application.Reservations.ReservationComments
             var unitOfWork = Substitute.For<IUnitOfWork>();
             unitOfWork.ReservationCommentRepository.Returns(repository);
 
-            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((ReservationComment?)null));
+            repository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var handler = new DeleteReservationCommentHandler(unitOfWork);
 

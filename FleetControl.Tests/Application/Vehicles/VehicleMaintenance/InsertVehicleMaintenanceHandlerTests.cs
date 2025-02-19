@@ -57,7 +57,7 @@ namespace FleetControl.Tests.Application.VehicleMaintenances.VehicleMaintenanceM
             await FluentActions.Invoking(() => handler.Handle(command, new CancellationToken()))
                 .Should().ThrowAsync<BusinessException>();
 
-            await unitOfWork.VehicleMaintenanceRepository.DidNotReceive().Create(Arg.Any<VehicleMaintenance>());
+            await unitOfWork.VehicleMaintenanceRepository.DidNotReceive().Create(new VehicleMaintenance(0,"",0,DateTime.Now,DateTime.Now));
         }
     }
 }

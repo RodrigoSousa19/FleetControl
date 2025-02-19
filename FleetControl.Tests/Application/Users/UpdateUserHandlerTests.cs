@@ -6,6 +6,7 @@ using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
 using MediatR;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 namespace FleetControl.Tests.Application.Users
 {
@@ -42,7 +43,7 @@ namespace FleetControl.Tests.Application.Users
             var unitOfWork = Substitute.For<IUnitOfWork>();
             var mediator = Substitute.For<IMediator>();
 
-            unitOfWork.UserRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((User?)null));
+            unitOfWork.UserRepository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var handler = new UpdateUserHandler(unitOfWork);
 

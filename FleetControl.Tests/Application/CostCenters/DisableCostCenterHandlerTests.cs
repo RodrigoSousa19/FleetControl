@@ -5,8 +5,8 @@ using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
-using MediatR;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 namespace FleetControl.Tests.Application.CostCenters
 {
@@ -47,7 +47,7 @@ namespace FleetControl.Tests.Application.CostCenters
             var unitOfWork = Substitute.For<IUnitOfWork>();
             unitOfWork.CostCenterRepository.Returns(repository);
 
-            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)null));
+            repository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var handler = new DisableCostCenterHandler(unitOfWork);
 

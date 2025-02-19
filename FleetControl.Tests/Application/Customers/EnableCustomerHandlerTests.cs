@@ -5,7 +5,6 @@ using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
-using MediatR;
 using NSubstitute;
 
 namespace FleetControl.Tests.Application.Customers

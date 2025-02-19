@@ -1,5 +1,4 @@
-﻿using Bogus.DataSets;
-using FleetControl.Application.Commands.Reservations.InsertReservation;
+﻿using FleetControl.Application.Commands.Reservations.InsertReservation;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Exceptions;
 using FleetControl.Core.Interfaces.Generic;
@@ -7,8 +6,8 @@ using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
-using MediatR;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 namespace FleetControl.Tests.Application.Reservations
 {
@@ -96,7 +95,7 @@ namespace FleetControl.Tests.Application.Reservations
             unitOfWork.VehicleRepository.Returns(vehicleRepository);
             unitOfWork.DriverRepository.Returns(driverRepository);
 
-            driverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)null));
+            driverRepository.GetById(Arg.Any<int>()).ReturnsNull();
             projectRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
             vehicleRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((FleetControl.Core.Entities.Vehicle?)vehicle));
 
@@ -128,7 +127,7 @@ namespace FleetControl.Tests.Application.Reservations
             unitOfWork.VehicleRepository.Returns(vehicleRepository);
             unitOfWork.DriverRepository.Returns(driverRepository);
 
-            projectRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)null));
+            projectRepository.GetById(Arg.Any<int>()).ReturnsNull();
             driverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)driver));
             vehicleRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((FleetControl.Core.Entities.Vehicle?)vehicle));
 

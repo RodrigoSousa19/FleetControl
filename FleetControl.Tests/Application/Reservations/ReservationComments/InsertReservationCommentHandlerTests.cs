@@ -6,8 +6,8 @@ using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
-using MediatR;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 namespace FleetControl.Tests.Application.Reservations.ReservationComments
 {
@@ -82,7 +82,7 @@ namespace FleetControl.Tests.Application.Reservations.ReservationComments
             unitOfWork.UserRepository.Returns(userRepository);
             unitOfWork.ReservationRepository.Returns(reservationRepository);
 
-            reservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)null));
+            reservationRepository.GetById(Arg.Any<int>()).ReturnsNull();
             userRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((User?)user));
 
             var command = _generatorsWork.ReservationCommentCommandsGenerator.Commands[CommandType.Insert] as InsertReservationCommentCommand;
@@ -111,7 +111,7 @@ namespace FleetControl.Tests.Application.Reservations.ReservationComments
             unitOfWork.ReservationRepository.Returns(reservationRepository);
 
             reservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
-            userRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((User?)null));
+            userRepository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var command = _generatorsWork.ReservationCommentCommandsGenerator.Commands[CommandType.Insert] as InsertReservationCommentCommand;
 

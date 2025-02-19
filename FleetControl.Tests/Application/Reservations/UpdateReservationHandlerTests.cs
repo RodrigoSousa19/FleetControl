@@ -6,8 +6,8 @@ using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
-using MediatR;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 namespace FleetControl.Tests.Application.Reservations
 {
@@ -53,7 +53,7 @@ namespace FleetControl.Tests.Application.Reservations
 
             unitOfWork.ReservationRepository.Returns(repository);
 
-            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)null));
+            repository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var handler = new UpdateReservationHandler(unitOfWork);
 
@@ -84,7 +84,7 @@ namespace FleetControl.Tests.Application.Reservations
             unitOfWork.DriverRepository.Returns(driverRepository);
 
             repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
-            driverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)null));
+            driverRepository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var handler = new UpdateReservationHandler(unitOfWork);
             var command = _generatorsWork.ReservationCommandsGenerator.Commands[CommandType.Update] as UpdateReservationCommand;

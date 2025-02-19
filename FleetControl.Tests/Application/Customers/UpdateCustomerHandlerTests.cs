@@ -5,8 +5,8 @@ using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
-using MediatR;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 namespace FleetControl.Tests.Application.Customers
 {
@@ -45,7 +45,7 @@ namespace FleetControl.Tests.Application.Customers
             var unitOfWork = Substitute.For<IUnitOfWork>();
             unitOfWork.CustomerRepository.Returns(repository);
 
-            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Customer?)null));
+            repository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var handler = new UpdateCustomerHandler(unitOfWork);
 

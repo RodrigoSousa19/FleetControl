@@ -7,6 +7,7 @@ using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
 using MediatR;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 namespace FleetControl.Tests.Application.Vehicles
 {
@@ -43,7 +44,7 @@ namespace FleetControl.Tests.Application.Vehicles
             var unitOfWork = Substitute.For<IUnitOfWork>();
             var mediator = Substitute.For<IMediator>();
 
-            unitOfWork.VehicleRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Vehicle?)null));
+            unitOfWork.VehicleRepository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var handler = new UpdateVehicleHandler(unitOfWork);
 
@@ -60,7 +61,7 @@ namespace FleetControl.Tests.Application.Vehicles
             var unitOfWork = Substitute.For<IUnitOfWork>();
             var mediator = Substitute.For<IMediator>();
 
-            unitOfWork.VehicleRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Vehicle?)null));
+            unitOfWork.VehicleRepository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var handler = new UpdateVehicleHandler(unitOfWork);
 

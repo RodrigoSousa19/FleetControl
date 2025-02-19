@@ -5,8 +5,8 @@ using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
-using MediatR;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 namespace FleetControl.Tests.Application.Projects
 {
@@ -57,7 +57,7 @@ namespace FleetControl.Tests.Application.Projects
             var unitOfWork = Substitute.For<IUnitOfWork>();
             unitOfWork.ProjectRepository.Returns(repository);
 
-            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)null));
+            repository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var handler = new UpdateProjectHandler(unitOfWork);
 
@@ -85,7 +85,7 @@ namespace FleetControl.Tests.Application.Projects
 
             repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
             costCenterRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)costCenter));
-            customerRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Customer?)null));
+            customerRepository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var handler = new UpdateProjectHandler(unitOfWork);
             var command = _generatorsWork.ProjectCommandsGenerator.Commands[CommandType.Update] as UpdateProjectCommand;
@@ -111,7 +111,7 @@ namespace FleetControl.Tests.Application.Projects
             unitOfWork.CostCenterRepository.Returns(costCenterRepository);
 
             repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
-            costCenterRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)null));
+            costCenterRepository.GetById(Arg.Any<int>()).ReturnsNull();
             customerRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Customer?)customer));
 
             var handler = new UpdateProjectHandler(unitOfWork);

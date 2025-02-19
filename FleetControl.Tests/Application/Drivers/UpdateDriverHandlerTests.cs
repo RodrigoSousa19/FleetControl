@@ -5,8 +5,8 @@ using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
-using MediatR;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 namespace FleetControl.Tests.Application.Drivers
 {
@@ -54,8 +54,8 @@ namespace FleetControl.Tests.Application.Drivers
             unitOfWork.DriverRepository.Returns(repository);
             unitOfWork.UserRepository.Returns(userRepository);
 
-            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)null));
-            unitOfWork.UserRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((User?)null));
+            repository.GetById(Arg.Any<int>()).ReturnsNull();
+            unitOfWork.UserRepository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var handler = new UpdateDriverHandler(unitOfWork);
 

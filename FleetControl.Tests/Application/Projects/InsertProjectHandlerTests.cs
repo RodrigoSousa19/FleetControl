@@ -6,8 +6,8 @@ using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
-using MediatR;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 namespace FleetControl.Tests.Application.Projects
 {
@@ -82,7 +82,7 @@ namespace FleetControl.Tests.Application.Projects
             unitOfWork.CustomerRepository.Returns(customerRepository);
             unitOfWork.CostCenterRepository.Returns(costCenterRepository);
 
-            customerRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Customer?)null));
+            customerRepository.GetById(Arg.Any<int>()).ReturnsNull();
             costCenterRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)costCenter));
 
             var command = _generatorsWork.ProjectCommandsGenerator.Commands[CommandType.Insert] as InsertProjectCommand;
@@ -111,7 +111,7 @@ namespace FleetControl.Tests.Application.Projects
             unitOfWork.CostCenterRepository.Returns(costCenterRepository);
 
             customerRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Customer?)customer));
-            costCenterRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)null));
+            costCenterRepository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var command = _generatorsWork.ProjectCommandsGenerator.Commands[CommandType.Insert] as InsertProjectCommand;
 

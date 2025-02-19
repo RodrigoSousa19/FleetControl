@@ -1,13 +1,13 @@
-﻿using FleetControl.Core.Entities;
+﻿using FleetControl.Application.Commands.Reservations.FinishReservation;
+using FleetControl.Core.Entities;
 using FleetControl.Core.Enums.Reservation;
-using FleetControl.Infrastructure.Persistence.Repositories;
-using FleetControl.Tests.Helpers.Generators;
-using FleetControl.Tests.Helpers;
-using MediatR;
-using NSubstitute;
-using FluentAssertions;
-using FleetControl.Application.Commands.Reservations.FinishReservation;
 using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories;
+using FleetControl.Tests.Helpers;
+using FleetControl.Tests.Helpers.Generators;
+using FluentAssertions;
+using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 namespace FleetControl.Tests.Application.Reservations
 {
@@ -50,7 +50,7 @@ namespace FleetControl.Tests.Application.Reservations
             var unitOfWork = Substitute.For<IUnitOfWork>();
             unitOfWork.ReservationRepository.Returns(repository);
 
-            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)null));
+            repository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var handler = new FinishReservationHandler(unitOfWork);
 
