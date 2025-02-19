@@ -1,5 +1,6 @@
 ﻿using FleetControl.Application.Commands.Projects.DeleteProject;
 using FleetControl.Core.Entities;
+using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
@@ -19,11 +20,12 @@ namespace FleetControl.Tests.Application.Projects
         {
             var project = _entityGenerator.Generate();
 
+            var repository = Substitute.For<IGenericRepository<Project>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.ProjectRepository.Returns(repository);
 
-            unitOfWork.ProjectRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
-            unitOfWork.ProjectRepository.Update(Arg.Any<Project>()).Returns(Task.CompletedTask);
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
+            repository.Update(Arg.Any<Project>()).Returns(Task.CompletedTask);
 
             var handler = new DeleteProjectHandler(unitOfWork);
 
@@ -33,16 +35,17 @@ namespace FleetControl.Tests.Application.Projects
 
             result.IsSuccess.Should().BeTrue();
 
-            await unitOfWork.ProjectRepository.Received(1).Update(Arg.Any<Project>());
+            await repository.Received(1).Update(Arg.Any<Project>());
         }
 
         [Fact]
         public async Task ProjectNotExists_Delete_Failt()
         {
+            var repository = Substitute.For<IGenericRepository<Project>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.ProjectRepository.Returns(repository);
 
-            unitOfWork.ProjectRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)null));
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)null));
 
             var handler = new DeleteProjectHandler(unitOfWork);
 

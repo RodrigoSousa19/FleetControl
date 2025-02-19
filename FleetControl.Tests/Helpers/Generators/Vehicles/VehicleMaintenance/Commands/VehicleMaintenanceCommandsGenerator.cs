@@ -10,7 +10,7 @@ namespace FleetControl.Tests.Helpers.Generators.Vehicles.VehicleMaintenance.Comm
             .RuleFor(m => m.TotalCost, f => decimal.Parse(f.Commerce.Price()))
             .RuleFor(m => m.Description, f => f.Lorem.Paragraph())
             .RuleFor(m => m.StartDate, f => f.Date.Soon(1))
-            .RuleFor(m => m.EndDate, f => f.Date.Soon(2));
+            .RuleFor(m => m.EndDate, f => f.Date.Soon(20));
 
 
         private readonly Faker<UpdateMaintenanceCommand> _updateCommandFaker = new Faker<UpdateMaintenanceCommand>()
@@ -18,7 +18,7 @@ namespace FleetControl.Tests.Helpers.Generators.Vehicles.VehicleMaintenance.Comm
             .RuleFor(m => m.TotalCost, f => decimal.Parse(f.Commerce.Price()))
             .RuleFor(m => m.Description, f => f.Lorem.Paragraph())
             .RuleFor(m => m.StartDate, f => f.Date.Soon(1))
-            .RuleFor(m => m.EndDate, f => f.Date.Soon(2));
+            .RuleFor(m => m.EndDate, f => f.Date.Soon(20));
 
 
         private readonly Faker<DeleteMaintenanceCommand> _deleteCommandFaker = new Faker<DeleteMaintenanceCommand>()

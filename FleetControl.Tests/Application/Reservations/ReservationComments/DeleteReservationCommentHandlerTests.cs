@@ -1,5 +1,6 @@
 ﻿using FleetControl.Application.Commands.Reservations.ReservationsComments;
 using FleetControl.Core.Entities;
+using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
@@ -19,11 +20,13 @@ namespace FleetControl.Tests.Application.Reservations.ReservationComments
         {
             var reservationComment = _entityGenerator.Generate();
 
-            var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            var repository = Substitute.For<IGenericRepository<ReservationComment>>();
 
-            unitOfWork.ReservationCommentRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((ReservationComment?)reservationComment));
-            unitOfWork.ReservationCommentRepository.Update(Arg.Any<ReservationComment>()).Returns(Task.CompletedTask);
+            var unitOfWork = Substitute.For<IUnitOfWork>();
+            unitOfWork.ReservationCommentRepository.Returns(repository);
+
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((ReservationComment?)reservationComment));
+            repository.Update(Arg.Any<ReservationComment>()).Returns(Task.CompletedTask);
 
             var handler = new DeleteReservationCommentHandler(unitOfWork);
 
@@ -39,10 +42,12 @@ namespace FleetControl.Tests.Application.Reservations.ReservationComments
         [Fact]
         public async Task ReservationCommentNotExists_Delete_Failt()
         {
-            var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            var repository = Substitute.For<IGenericRepository<ReservationComment>>();
 
-            unitOfWork.ReservationCommentRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((ReservationComment?)null));
+            var unitOfWork = Substitute.For<IUnitOfWork>();
+            unitOfWork.ReservationCommentRepository.Returns(repository);
+
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((ReservationComment?)null));
 
             var handler = new DeleteReservationCommentHandler(unitOfWork);
 

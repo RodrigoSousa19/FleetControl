@@ -19,7 +19,6 @@ namespace FleetControl.Tests.Application.Customers
         {
             var repository = Substitute.For<IGenericRepository<Customer>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-
             unitOfWork.CustomerRepository.Returns(repository);
 
             var command = _generatorsWork.CustomerCommandsGenerator.Commands[CommandType.Insert] as InsertCustomerCommand;
@@ -36,7 +35,6 @@ namespace FleetControl.Tests.Application.Customers
         {
             var repository = Substitute.For<IGenericRepository<Customer>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-
             unitOfWork.CustomerRepository.Returns(repository);
 
             var command = new InsertCustomerCommand

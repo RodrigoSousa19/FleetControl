@@ -1,11 +1,13 @@
 ﻿using FleetControl.Application.Commands.Drivers.DriverProject;
 using FleetControl.Core.Entities;
+using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
 using MediatR;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 namespace FleetControl.Tests.Application.DriverProject
 {
@@ -23,14 +25,20 @@ namespace FleetControl.Tests.Application.DriverProject
             var project = _userGenerator.Generate();
             var driver = _driverGenerator.Generate();
 
+            var driverRepository = Substitute.For<IGenericRepository<Driver>>();
+            var projectRepository = Substitute.For<IGenericRepository<Project>>();
+            var repository = Substitute.For<IGenericRepository<DriverProjects>>();
+
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.DriverRepository.Returns(driverRepository);
+            unitOfWork.ProjectRepository.Returns(projectRepository);
+            unitOfWork.DriverProjectsRepository.Returns(repository);
 
-            unitOfWork.DriverProjectsRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((DriverProjects?)driverProject));
-            unitOfWork.ProjectRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
-            unitOfWork.DriverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)driver));
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((DriverProjects?)driverProject));
+            projectRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
+            driverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)driver));
 
-            unitOfWork.DriverProjectsRepository.Update(Arg.Any<DriverProjects>()).Returns(Task.CompletedTask);
+            repository.Update(Arg.Any<DriverProjects>()).Returns(Task.CompletedTask);
 
             var handler = new UpdateDriverProjectHandler(unitOfWork);
 
@@ -40,18 +48,23 @@ namespace FleetControl.Tests.Application.DriverProject
 
             result.IsSuccess.Should().BeTrue();
 
-            await unitOfWork.DriverProjectsRepository.Received(1).Update(Arg.Any<DriverProjects>());
+            await repository.Received(1).Update(Arg.Any<DriverProjects>());
         }
 
         [Fact]
         public async Task DriverProjectNotExists_Update_Fail()
         {
-            var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            var driverRepository = Substitute.For<IGenericRepository<Driver>>();
+            var projectRepository = Substitute.For<IGenericRepository<Project>>();
+            var repository = Substitute.For<IGenericRepository<DriverProjects>>();
 
-            unitOfWork.DriverProjectsRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((DriverProjects?)null));
-            unitOfWork.ProjectRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)null));
-            unitOfWork.DriverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)null));
+            var unitOfWork = Substitute.For<IUnitOfWork>();
+            unitOfWork.DriverRepository.Returns(driverRepository);
+            unitOfWork.ProjectRepository.Returns(projectRepository);
+
+            repository.GetById(Arg.Any<int>()).ReturnsNull();
+            projectRepository.GetById(Arg.Any<int>()).ReturnsNull();
+            driverRepository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var handler = new UpdateDriverProjectHandler(unitOfWork);
 

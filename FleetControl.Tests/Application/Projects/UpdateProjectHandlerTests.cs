@@ -1,5 +1,6 @@
 ﻿using FleetControl.Application.Commands.Projects.UpdateProject;
 using FleetControl.Core.Entities;
+using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
@@ -23,12 +24,18 @@ namespace FleetControl.Tests.Application.Projects
             var customer = _customerGenerator.Generate();
             var costCenter = _costCenterGenerator.Generate();
 
-            var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            var repository = Substitute.For<IGenericRepository<Project>>();
+            var customerRepository = Substitute.For<IGenericRepository<Customer>>();
+            var costCenterRepository = Substitute.For<IGenericRepository<CostCenter>>();
 
-            unitOfWork.CustomerRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Customer?)customer));
-            unitOfWork.CostCenterRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)costCenter));
-            unitOfWork.ProjectRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
+            var unitOfWork = Substitute.For<IUnitOfWork>();
+            unitOfWork.ProjectRepository.Returns(repository);
+            unitOfWork.CustomerRepository.Returns(customerRepository);
+            unitOfWork.CostCenterRepository.Returns(costCenterRepository);
+
+            customerRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Customer?)customer));
+            costCenterRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)costCenter));
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
 
             unitOfWork.ProjectRepository.Update(Arg.Any<Project>()).Returns(Task.CompletedTask);
 
@@ -40,16 +47,17 @@ namespace FleetControl.Tests.Application.Projects
 
             result.IsSuccess.Should().BeTrue();
 
-            await unitOfWork.ProjectRepository.Received(1).Update(Arg.Any<Project>());
+            await repository.Received(1).Update(Arg.Any<Project>());
         }
 
         [Fact]
         public async Task InputDataAreNotOk_Update_Fail()
         {
+            var repository = Substitute.For<IGenericRepository<Project>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.ProjectRepository.Returns(repository);
 
-            unitOfWork.ProjectRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)null));
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)null));
 
             var handler = new UpdateProjectHandler(unitOfWork);
 
@@ -66,12 +74,18 @@ namespace FleetControl.Tests.Application.Projects
             var project = _entityGenerator.Generate();
             var costCenter = _costCenterGenerator.Generate();
 
-            var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            var repository = Substitute.For<IGenericRepository<Project>>();
+            var customerRepository = Substitute.For<IGenericRepository<Customer>>();
+            var costCenterRepository = Substitute.For<IGenericRepository<CostCenter>>();
 
-            unitOfWork.ProjectRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
-            unitOfWork.CostCenterRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)costCenter));
-            unitOfWork.CustomerRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Customer?)null));
+            var unitOfWork = Substitute.For<IUnitOfWork>();
+            unitOfWork.ProjectRepository.Returns(repository);
+            unitOfWork.CustomerRepository.Returns(customerRepository);
+            unitOfWork.CostCenterRepository.Returns(costCenterRepository);
+
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
+            costCenterRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)costCenter));
+            customerRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Customer?)null));
 
             var handler = new UpdateProjectHandler(unitOfWork);
             var command = _generatorsWork.ProjectCommandsGenerator.Commands[CommandType.Update] as UpdateProjectCommand;
@@ -87,12 +101,18 @@ namespace FleetControl.Tests.Application.Projects
             var project = _entityGenerator.Generate();
             var customer = _customerGenerator.Generate();
 
-            var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            var repository = Substitute.For<IGenericRepository<Project>>();
+            var customerRepository = Substitute.For<IGenericRepository<Customer>>();
+            var costCenterRepository = Substitute.For<IGenericRepository<CostCenter>>();
 
-            unitOfWork.ProjectRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
-            unitOfWork.CostCenterRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)null));
-            unitOfWork.CustomerRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Customer?)customer));
+            var unitOfWork = Substitute.For<IUnitOfWork>();
+            unitOfWork.ProjectRepository.Returns(repository);
+            unitOfWork.CustomerRepository.Returns(customerRepository);
+            unitOfWork.CostCenterRepository.Returns(costCenterRepository);
+
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
+            costCenterRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)null));
+            customerRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Customer?)customer));
 
             var handler = new UpdateProjectHandler(unitOfWork);
             var command = _generatorsWork.ProjectCommandsGenerator.Commands[CommandType.Update] as UpdateProjectCommand;

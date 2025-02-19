@@ -2,6 +2,7 @@
 using FleetControl.Core.Entities;
 using FleetControl.Core.Enums.User;
 using FleetControl.Core.Exceptions;
+using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
@@ -20,10 +21,14 @@ namespace FleetControl.Tests.Application.Drivers
         {
             var user = _userGenerator.Generate();
 
+            var repository = Substitute.For<IGenericRepository<Driver>>();
+            var userRepository = Substitute.For<IGenericRepository<User>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
 
-            unitOfWork.UserRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((User?)user));
+            unitOfWork.DriverRepository.Returns(repository);
+            unitOfWork.UserRepository.Returns(userRepository);
+
+            userRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((User?)user));
 
             var command = _generatorsWork.DriverCommandsGenerator.Commands[CommandType.Insert] as InsertDriverCommand;
 
@@ -33,14 +38,15 @@ namespace FleetControl.Tests.Application.Drivers
 
             result.IsSuccess.Should().BeTrue();
 
-            await unitOfWork.DriverRepository.Received(1).Create(Arg.Any<Driver>());
+            await repository.Received(1).Create(Arg.Any<Driver>());
         }
 
         [Fact]
         public async Task InputDataAreNotOk_Insert_ThrowsBusinessException()
         {
+            var repository = Substitute.For<IGenericRepository<Driver>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.DriverRepository.Returns(repository);
 
             var command = new InsertDriverCommand
             {
@@ -54,7 +60,7 @@ namespace FleetControl.Tests.Application.Drivers
             await FluentActions.Invoking(() => handler.Handle(command, new CancellationToken()))
                 .Should().ThrowAsync<BusinessException>();
 
-            await unitOfWork.DriverRepository.DidNotReceive().Create(Arg.Any<Driver>());
+            await repository.DidNotReceive().Create(Arg.Any<Driver>());
         }
     }
 }

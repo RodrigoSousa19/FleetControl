@@ -1,5 +1,6 @@
 ﻿using FleetControl.Application.Commands.Drivers.EnableDriver;
 using FleetControl.Core.Entities;
+using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
@@ -21,11 +22,12 @@ namespace FleetControl.Tests.Application.Drivers
 
             driver.Disable();
 
+            var repository = Substitute.For<IGenericRepository<Driver>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.DriverRepository.Returns(repository);
 
-            unitOfWork.DriverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)driver));
-            unitOfWork.DriverRepository.Update(Arg.Any<Driver>()).Returns(Task.CompletedTask);
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)driver));
+            repository.Update(Arg.Any<Driver>()).Returns(Task.CompletedTask);
 
             var handler = new EnableDriverHandler(unitOfWork);
 
@@ -36,16 +38,17 @@ namespace FleetControl.Tests.Application.Drivers
 
             result.IsSuccess.Should().BeTrue();
 
-            await unitOfWork.DriverRepository.Received(1).Update(Arg.Any<Driver>());
+            await repository.Received(1).Update(Arg.Any<Driver>());
         }
 
         [Fact]
         public async Task DriverNotExists_Enable_Fail()
         {
+            var repository = Substitute.For<IGenericRepository<Driver>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.DriverRepository.Returns(repository);
 
-            unitOfWork.DriverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)null));
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)null));
 
             var handler = new EnableDriverHandler(unitOfWork);
 
@@ -62,11 +65,12 @@ namespace FleetControl.Tests.Application.Drivers
             var driver = _entityGenerator.Generate();
             driver.Enable();
 
+            var repository = Substitute.For<IGenericRepository<Driver>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.DriverRepository.Returns(repository);
 
-            unitOfWork.DriverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)driver));
-            unitOfWork.DriverRepository.Update(Arg.Any<Driver>()).Returns(Task.CompletedTask);
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)driver));
+            repository.Update(Arg.Any<Driver>()).Returns(Task.CompletedTask);
 
             var handler = new EnableDriverHandler(unitOfWork);
 

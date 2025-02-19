@@ -1,6 +1,7 @@
 ﻿using FleetControl.Application.Commands.Reservations.UpdateReservation;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Exceptions;
+using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
@@ -21,13 +22,17 @@ namespace FleetControl.Tests.Application.Reservations
             var reservation = _reservationGenerator.Generate();
             var driver = _driverGenerator.Generate();
 
+            var repository = Substitute.For<IGenericRepository<Reservation>>();
+            var driverRepository = Substitute.For<IGenericRepository<Driver>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
 
-            unitOfWork.DriverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)driver));
-            unitOfWork.ReservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
+            unitOfWork.ReservationRepository.Returns(repository);
+            unitOfWork.DriverRepository.Returns(driverRepository);
 
-            unitOfWork.ReservationRepository.Update(Arg.Any<Reservation>()).Returns(Task.CompletedTask);
+            driverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)driver));
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
+
+            repository.Update(Arg.Any<Reservation>()).Returns(Task.CompletedTask);
 
             var handler = new UpdateReservationHandler(unitOfWork);
 
@@ -37,16 +42,18 @@ namespace FleetControl.Tests.Application.Reservations
 
             result.IsSuccess.Should().BeTrue();
 
-            await unitOfWork.ReservationRepository.Received(1).Update(Arg.Any<Reservation>());
+            await repository.Received(1).Update(Arg.Any<Reservation>());
         }
 
         [Fact]
         public async Task InputDataAreNotOk_Update_Fail()
         {
+            var repository = Substitute.For<IGenericRepository<Reservation>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
 
-            unitOfWork.ReservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)null));
+            unitOfWork.ReservationRepository.Returns(repository);
+
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)null));
 
             var handler = new UpdateReservationHandler(unitOfWork);
 
@@ -61,7 +68,7 @@ namespace FleetControl.Tests.Application.Reservations
             await FluentActions.Invoking(() => handler.Handle(command, new CancellationToken()))
                 .Should().ThrowAsync<BusinessException>();
 
-            await unitOfWork.ReservationRepository.DidNotReceive().Update(Arg.Any<Reservation>());
+            await repository.DidNotReceive().Update(Arg.Any<Reservation>());
         }
 
         [Fact]
@@ -69,11 +76,15 @@ namespace FleetControl.Tests.Application.Reservations
         {
             var reservation = _reservationGenerator.Generate();
 
+            var repository = Substitute.For<IGenericRepository<Reservation>>();
+            var driverRepository = Substitute.For<IGenericRepository<Driver>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
 
-            unitOfWork.ReservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
-            unitOfWork.DriverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)null));
+            unitOfWork.ReservationRepository.Returns(repository);
+            unitOfWork.DriverRepository.Returns(driverRepository);
+
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
+            driverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)null));
 
             var handler = new UpdateReservationHandler(unitOfWork);
             var command = _generatorsWork.ReservationCommandsGenerator.Commands[CommandType.Update] as UpdateReservationCommand;

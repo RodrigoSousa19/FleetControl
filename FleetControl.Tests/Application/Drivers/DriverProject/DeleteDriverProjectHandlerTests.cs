@@ -1,5 +1,6 @@
 ﻿using FleetControl.Application.Commands.Drivers.DriverProject;
 using FleetControl.Core.Entities;
+using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
@@ -19,11 +20,12 @@ namespace FleetControl.Tests.Application.Drivers.DriverProject
         {
             var driverProject = _entityGenerator.Generate();
 
+            var repository = Substitute.For<IGenericRepository<DriverProjects>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.DriverProjectsRepository.Returns(repository);
 
-            unitOfWork.DriverProjectsRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((DriverProjects?)driverProject));
-            unitOfWork.DriverProjectsRepository.Update(Arg.Any<DriverProjects>()).Returns(Task.CompletedTask);
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((DriverProjects?)driverProject));
+            repository.Update(Arg.Any<DriverProjects>()).Returns(Task.CompletedTask);
 
             var handler = new DeleteDriverProjectHandler(unitOfWork);
 
@@ -33,16 +35,17 @@ namespace FleetControl.Tests.Application.Drivers.DriverProject
 
             result.IsSuccess.Should().BeTrue();
 
-            await unitOfWork.DriverProjectsRepository.Received(1).Update(Arg.Any<DriverProjects>());
+            await repository.Received(1).Update(Arg.Any<DriverProjects>());
         }
 
         [Fact]
         public async Task DriverProjectNotExists_Delete_Failt()
         {
+            var repository = Substitute.For<IGenericRepository<DriverProjects>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.DriverProjectsRepository.Returns(repository);
 
-            unitOfWork.DriverProjectsRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((DriverProjects?)null));
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((DriverProjects?)null));
 
             var handler = new DeleteDriverProjectHandler(unitOfWork);
 

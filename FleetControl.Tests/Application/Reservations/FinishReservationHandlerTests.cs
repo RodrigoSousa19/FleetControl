@@ -7,6 +7,7 @@ using MediatR;
 using NSubstitute;
 using FluentAssertions;
 using FleetControl.Application.Commands.Reservations.FinishReservation;
+using FleetControl.Core.Interfaces.Generic;
 
 namespace FleetControl.Tests.Application.Reservations
 {
@@ -22,11 +23,12 @@ namespace FleetControl.Tests.Application.Reservations
 
             reservation.ConfirmReservation();
 
+            var repository = Substitute.For<IGenericRepository<Reservation>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.ReservationRepository.Returns(repository);
 
-            unitOfWork.ReservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
-            unitOfWork.ReservationRepository.Update(Arg.Any<Reservation>()).Returns(Task.CompletedTask);
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
+            repository.Update(Arg.Any<Reservation>()).Returns(Task.CompletedTask);
 
             var handler = new FinishReservationHandler(unitOfWork);
 
@@ -44,10 +46,11 @@ namespace FleetControl.Tests.Application.Reservations
         [Fact]
         public async Task ReservationNotExists_Finish_Fail()
         {
+            var repository = Substitute.For<IGenericRepository<Reservation>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.ReservationRepository.Returns(repository);
 
-            unitOfWork.ReservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)null));
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)null));
 
             var handler = new FinishReservationHandler(unitOfWork);
 
@@ -63,11 +66,12 @@ namespace FleetControl.Tests.Application.Reservations
         {
             var reservation = _entityGenerator.Generate();
 
+            var repository = Substitute.For<IGenericRepository<Reservation>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.ReservationRepository.Returns(repository);
 
-            unitOfWork.ReservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
-            unitOfWork.ReservationRepository.Update(Arg.Any<Reservation>()).Returns(Task.CompletedTask);
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
+            repository.Update(Arg.Any<Reservation>()).Returns(Task.CompletedTask);
 
             var handler = new FinishReservationHandler(unitOfWork);
 
@@ -87,11 +91,12 @@ namespace FleetControl.Tests.Application.Reservations
 
             reservation.CancelReservation();
 
+            var repository = Substitute.For<IGenericRepository<Reservation>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.ReservationRepository.Returns(repository);
 
-            unitOfWork.ReservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
-            unitOfWork.ReservationRepository.Update(Arg.Any<Reservation>()).Returns(Task.CompletedTask);
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
+            repository.Update(Arg.Any<Reservation>()).Returns(Task.CompletedTask);
 
             var handler = new FinishReservationHandler(unitOfWork);
 
@@ -112,11 +117,12 @@ namespace FleetControl.Tests.Application.Reservations
             reservation.ConfirmReservation();
             reservation.FinishReservation();
 
+            var repository = Substitute.For<IGenericRepository<Reservation>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.ReservationRepository.Returns(repository);
 
-            unitOfWork.ReservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
-            unitOfWork.ReservationRepository.Update(Arg.Any<Reservation>()).Returns(Task.CompletedTask);
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
+            repository.Update(Arg.Any<Reservation>()).Returns(Task.CompletedTask);
 
             var handler = new FinishReservationHandler(unitOfWork);
 

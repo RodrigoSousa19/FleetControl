@@ -23,8 +23,8 @@ namespace FleetControl.Tests.Application.Customers
 
             var repository = Substitute.For<IGenericRepository<Customer>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-
             unitOfWork.CustomerRepository.Returns(repository);
+
             repository.GetById(Arg.Any<int>()).Returns(customer);
             repository.Update(Arg.Any<Customer>()).Returns(Task.CompletedTask);
 
@@ -42,8 +42,8 @@ namespace FleetControl.Tests.Application.Customers
         {
             var repository = Substitute.For<IGenericRepository<Customer>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-
             unitOfWork.CustomerRepository.Returns(repository);
+
             repository.GetById(Arg.Any<int>()).Returns((Customer?)null);
 
             var handler = new EnableCustomerHandler(unitOfWork);
@@ -62,8 +62,8 @@ namespace FleetControl.Tests.Application.Customers
 
             var repository = Substitute.For<IGenericRepository<Customer>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-
             unitOfWork.CustomerRepository.Returns(repository);
+
             repository.GetById(Arg.Any<int>()).Returns(customer);
             repository.Update(Arg.Any<Customer>()).Returns(Task.CompletedTask);
 

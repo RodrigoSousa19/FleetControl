@@ -1,5 +1,6 @@
 ﻿using FleetControl.Application.Commands.CostCenters.EnableCostCenter;
 using FleetControl.Core.Entities;
+using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
@@ -21,11 +22,12 @@ namespace FleetControl.Tests.Application.CostCenters
 
             costCenter.Disable();
 
+            var repository = Substitute.For<IGenericRepository<CostCenter>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.CostCenterRepository.Returns(repository);
 
-            unitOfWork.CostCenterRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)costCenter));
-            unitOfWork.CostCenterRepository.Update(Arg.Any<CostCenter>()).Returns(Task.CompletedTask);
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)costCenter));
+            repository.Update(Arg.Any<CostCenter>()).Returns(Task.CompletedTask);
 
             var handler = new EnableCostCenterHandler(unitOfWork);
 
@@ -36,16 +38,17 @@ namespace FleetControl.Tests.Application.CostCenters
 
             result.IsSuccess.Should().BeTrue();
 
-            await unitOfWork.CostCenterRepository.Received(1).Update(Arg.Any<CostCenter>());
+            await repository.Received(1).Update(Arg.Any<CostCenter>());
         }
 
         [Fact]
         public async Task CostCenterNotExists_Enable_Fail()
         {
+            var repository = Substitute.For<IGenericRepository<CostCenter>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.CostCenterRepository.Returns(repository);
 
-            unitOfWork.CostCenterRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)null));
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)null));
 
             var handler = new EnableCostCenterHandler(unitOfWork);
 
@@ -63,11 +66,12 @@ namespace FleetControl.Tests.Application.CostCenters
 
             costCenter.Enable();
 
+            var repository = Substitute.For<IGenericRepository<CostCenter>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.CostCenterRepository.Returns(repository);
 
-            unitOfWork.CostCenterRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)costCenter));
-            unitOfWork.CostCenterRepository.Update(Arg.Any<CostCenter>()).Returns(Task.CompletedTask);
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((CostCenter?)costCenter));
+            repository.Update(Arg.Any<CostCenter>()).Returns(Task.CompletedTask);
 
             var handler = new EnableCostCenterHandler(unitOfWork);
 

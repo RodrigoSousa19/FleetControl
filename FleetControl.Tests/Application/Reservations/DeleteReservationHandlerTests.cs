@@ -6,6 +6,7 @@ using FleetControl.Tests.Helpers;
 using MediatR;
 using NSubstitute;
 using FluentAssertions;
+using FleetControl.Core.Interfaces.Generic;
 
 namespace FleetControl.Tests.Application.Reservations
 {
@@ -19,11 +20,12 @@ namespace FleetControl.Tests.Application.Reservations
         {
             var reservation = _entityGenerator.Generate();
 
+            var repository = Substitute.For<IGenericRepository<Reservation>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.ReservationRepository.Returns(repository);
 
-            unitOfWork.ReservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
-            unitOfWork.ReservationRepository.Update(Arg.Any<Reservation>()).Returns(Task.CompletedTask);
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
+            repository.Update(Arg.Any<Reservation>()).Returns(Task.CompletedTask);
 
             var handler = new DeleteReservationHandler(unitOfWork);
 
@@ -33,16 +35,17 @@ namespace FleetControl.Tests.Application.Reservations
 
             result.IsSuccess.Should().BeTrue();
 
-            await unitOfWork.ReservationRepository.Received(1).Update(Arg.Any<Reservation>());
+            await repository.Received(1).Update(Arg.Any<Reservation>());
         }
 
         [Fact]
         public async Task ReservationNotExists_Delete_Failt()
         {
+            var repository = Substitute.For<IGenericRepository<Reservation>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.ReservationRepository.Returns(repository);
 
-            unitOfWork.ReservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)null));
+            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)null));
 
             var handler = new DeleteReservationHandler(unitOfWork);
 

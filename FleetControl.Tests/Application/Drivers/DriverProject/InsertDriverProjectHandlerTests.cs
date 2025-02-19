@@ -1,5 +1,6 @@
 ﻿using FleetControl.Application.Commands.Drivers.DriverProject;
 using FleetControl.Core.Entities;
+using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
@@ -20,11 +21,17 @@ namespace FleetControl.Tests.Application.DriverProjectss.DriverProject
             var project = _projectGenerator.Generate();
             var driver = _driverGenerator.Generate();
 
-            var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            var driverRepository = Substitute.For<IGenericRepository<Driver>>();
+            var projectRepository = Substitute.For<IGenericRepository<Project>>();
+            var repository = Substitute.For<IGenericRepository<DriverProjects>>();
 
-            unitOfWork.ProjectRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
-            unitOfWork.DriverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)driver));
+            var unitOfWork = Substitute.For<IUnitOfWork>();
+            unitOfWork.DriverRepository.Returns(driverRepository);
+            unitOfWork.ProjectRepository.Returns(projectRepository);
+            unitOfWork.DriverProjectsRepository.Returns(repository);
+
+            projectRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
+            driverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)driver));
 
             var command = _generatorsWork.DriverProjectsCommandsGenerator.Commands[CommandType.Insert] as InsertDriverProjectCommand;
 
@@ -34,14 +41,15 @@ namespace FleetControl.Tests.Application.DriverProjectss.DriverProject
 
             result.IsSuccess.Should().BeTrue();
 
-            await unitOfWork.DriverProjectsRepository.Received(1).Create(Arg.Any<DriverProjects>());
+            await repository.Received(1).Create(Arg.Any<DriverProjects>());
         }
 
         [Fact]
         public async Task InputDataAreNotOk_Insert_ThrowsBusinessException()
         {
+            var repository = Substitute.For<IGenericRepository<DriverProjects>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.DriverProjectsRepository.Returns(repository);
 
             var command = new InsertDriverProjectCommand
             {
@@ -55,7 +63,7 @@ namespace FleetControl.Tests.Application.DriverProjectss.DriverProject
 
             result.IsSuccess.Should().BeFalse();
 
-            await unitOfWork.DriverProjectsRepository.DidNotReceive().Create(Arg.Any<DriverProjects>());
+            await repository.DidNotReceive().Create(Arg.Any<DriverProjects>());
         }
     }
 }

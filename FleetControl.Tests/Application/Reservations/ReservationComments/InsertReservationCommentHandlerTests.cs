@@ -1,6 +1,7 @@
 ﻿using FleetControl.Application.Commands.Reservations.ReservationsComments;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Exceptions;
+using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
@@ -22,11 +23,17 @@ namespace FleetControl.Tests.Application.Reservations.ReservationComments
             var user = _userGenerator.Generate();
             var reservation = _reservationGenerator.Generate();
 
-            var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            var repository = Substitute.For<IGenericRepository<ReservationComment>>();
+            var userRepository = Substitute.For<IGenericRepository<User>>();
+            var reservationRepository = Substitute.For<IGenericRepository<Reservation>>();
 
-            unitOfWork.UserRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((User?)user));
-            unitOfWork.ReservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
+            var unitOfWork = Substitute.For<IUnitOfWork>();
+            unitOfWork.ReservationCommentRepository.Returns(repository);
+            unitOfWork.UserRepository.Returns(userRepository);
+            unitOfWork.ReservationRepository.Returns(reservationRepository);
+
+            userRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((User?)user));
+            reservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
 
             var command = _generatorsWork.ReservationCommentCommandsGenerator.Commands[CommandType.Insert] as InsertReservationCommentCommand;
 
@@ -36,14 +43,15 @@ namespace FleetControl.Tests.Application.Reservations.ReservationComments
 
             result.IsSuccess.Should().BeTrue();
 
-            await unitOfWork.ReservationCommentRepository.Received(1).Create(Arg.Any<ReservationComment>());
+            await repository.Received(1).Create(Arg.Any<ReservationComment>());
         }
 
         [Fact]
         public async Task InputDataAreNotOk_Insert_ThrowsBusinessException()
         {
+            var repository = Substitute.For<IGenericRepository<ReservationComment>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.ReservationCommentRepository.Returns(repository);
 
             var command = new InsertReservationCommentCommand
             {
@@ -57,7 +65,7 @@ namespace FleetControl.Tests.Application.Reservations.ReservationComments
             await FluentActions.Invoking(() => handler.Handle(command, new CancellationToken()))
                 .Should().ThrowAsync<BusinessException>();
 
-            await unitOfWork.ReservationCommentRepository.DidNotReceive().Create(Arg.Any<ReservationComment>());
+            await repository.DidNotReceive().Create(Arg.Any<ReservationComment>());
         }
 
         [Fact]
@@ -65,11 +73,17 @@ namespace FleetControl.Tests.Application.Reservations.ReservationComments
         {
             var user = _userGenerator.Generate();
 
-            var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            var repository = Substitute.For<IGenericRepository<ReservationComment>>();
+            var userRepository = Substitute.For<IGenericRepository<User>>();
+            var reservationRepository = Substitute.For<IGenericRepository<Reservation>>();
 
-            unitOfWork.ReservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)null));
-            unitOfWork.UserRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((User?)user));
+            var unitOfWork = Substitute.For<IUnitOfWork>();
+            unitOfWork.ReservationCommentRepository.Returns(repository);
+            unitOfWork.UserRepository.Returns(userRepository);
+            unitOfWork.ReservationRepository.Returns(reservationRepository);
+
+            reservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)null));
+            userRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((User?)user));
 
             var command = _generatorsWork.ReservationCommentCommandsGenerator.Commands[CommandType.Insert] as InsertReservationCommentCommand;
 
@@ -79,7 +93,7 @@ namespace FleetControl.Tests.Application.Reservations.ReservationComments
 
             result.IsSuccess.Should().BeFalse();
 
-            await unitOfWork.ReservationCommentRepository.DidNotReceive().Create(Arg.Any<ReservationComment>());
+            await repository.DidNotReceive().Create(Arg.Any<ReservationComment>());
         }
 
         [Fact]
@@ -87,11 +101,17 @@ namespace FleetControl.Tests.Application.Reservations.ReservationComments
         {
             var reservation = _reservationGenerator.Generate();
 
-            var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            var repository = Substitute.For<IGenericRepository<ReservationComment>>();
+            var userRepository = Substitute.For<IGenericRepository<User>>();
+            var reservationRepository = Substitute.For<IGenericRepository<Reservation>>();
 
-            unitOfWork.ReservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
-            unitOfWork.UserRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((User?)null));
+            var unitOfWork = Substitute.For<IUnitOfWork>();
+            unitOfWork.ReservationCommentRepository.Returns(repository);
+            unitOfWork.UserRepository.Returns(userRepository);
+            unitOfWork.ReservationRepository.Returns(reservationRepository);
+
+            reservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
+            userRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((User?)null));
 
             var command = _generatorsWork.ReservationCommentCommandsGenerator.Commands[CommandType.Insert] as InsertReservationCommentCommand;
 
@@ -101,7 +121,7 @@ namespace FleetControl.Tests.Application.Reservations.ReservationComments
 
             result.IsSuccess.Should().BeFalse();
 
-            await unitOfWork.ReservationCommentRepository.DidNotReceive().Create(Arg.Any<ReservationComment>());
+            await repository.DidNotReceive().Create(Arg.Any<ReservationComment>());
         }
     }
 }

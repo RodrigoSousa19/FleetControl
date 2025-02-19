@@ -1,6 +1,7 @@
 ﻿using FleetControl.Application.Commands.CostCenters.InsertCostCenter;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Exceptions;
+using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FluentAssertions;
@@ -16,8 +17,9 @@ namespace FleetControl.Tests.Application.CostCenterTests
         [Fact]
         public async Task InputDataAreOk_Insert_Success()
         {
+            var repository = Substitute.For<IGenericRepository<CostCenter>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.CostCenterRepository.Returns(repository);
 
             var command = _generatorsWork.CostCenterCommandsGenerator.Commands[Helpers.CommandType.Insert] as InsertCostCenterCommand;
 
@@ -27,14 +29,15 @@ namespace FleetControl.Tests.Application.CostCenterTests
 
             result.IsSuccess.Should().BeTrue();
 
-            await unitOfWork.CostCenterRepository.Received(1).Create(Arg.Any<CostCenter>());
+            await repository.Received(1).Create(Arg.Any<CostCenter>());
         }
 
         [Fact]
         public async Task InputDataAreNotOk_Insert_ThrowsBusinessException()
         {
+            var repository = Substitute.For<IGenericRepository<CostCenter>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+            unitOfWork.CostCenterRepository.Returns(repository);
 
             var command = new InsertCostCenterCommand
             {
@@ -46,7 +49,7 @@ namespace FleetControl.Tests.Application.CostCenterTests
             await FluentActions.Invoking(() => handler.Handle(command, new CancellationToken()))
                 .Should().ThrowAsync<BusinessException>();
 
-            await unitOfWork.CostCenterRepository.DidNotReceive().Create(Arg.Any<CostCenter>());
+            await repository.DidNotReceive().Create(Arg.Any<CostCenter>());
         }
     }
 }
