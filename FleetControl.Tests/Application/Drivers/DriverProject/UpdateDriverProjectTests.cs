@@ -1,11 +1,11 @@
-﻿using FleetControl.Core.Entities;
+﻿using FleetControl.Application.Commands.Drivers.DriverProject;
+using FleetControl.Core.Entities;
 using FleetControl.Infrastructure.Persistence.Repositories;
-using FleetControl.Tests.Helpers.Generators;
 using FleetControl.Tests.Helpers;
+using FleetControl.Tests.Helpers.Generators;
+using FluentAssertions;
 using MediatR;
 using NSubstitute;
-using FleetControl.Application.Commands.Drivers.DriverProject;
-using FluentAssertions;
 
 namespace FleetControl.Tests.Application.DriverProject
 {
