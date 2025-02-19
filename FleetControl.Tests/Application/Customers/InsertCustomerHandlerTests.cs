@@ -1,6 +1,7 @@
 ﻿using FleetControl.Application.Commands.Customers.InsertCustomer;
 using FleetControl.Core.Entities;
 using FleetControl.Core.Exceptions;
+using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FluentAssertions;
@@ -16,25 +17,27 @@ namespace FleetControl.Tests.Application.Customers
         [Fact]
         public async Task InputDataAreOk_Insert_Success()
         {
+            var repository = Substitute.For<IGenericRepository<Customer>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+
+            unitOfWork.CustomerRepository.Returns(repository);
 
             var command = _generatorsWork.CustomerCommandsGenerator.Commands[CommandType.Insert] as InsertCustomerCommand;
-
             var handler = new InsertCustomerHandler(unitOfWork);
 
-            var result = await handler.Handle(command, new CancellationToken());
+            var result = await handler.Handle(command, CancellationToken.None);
 
             result.IsSuccess.Should().BeTrue();
-
-            await unitOfWork.CustomerRepository.Received(1).Create(Arg.Any<Customer>());
+            await repository.Received(1).Create(Arg.Any<Customer>());
         }
 
         [Fact]
         public async Task InputDataAreNotOk_Insert_ThrowsBusinessException()
         {
+            var repository = Substitute.For<IGenericRepository<Customer>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
+
+            unitOfWork.CustomerRepository.Returns(repository);
 
             var command = new InsertCustomerCommand
             {
@@ -47,10 +50,10 @@ namespace FleetControl.Tests.Application.Customers
 
             var handler = new InsertCustomerHandler(unitOfWork);
 
-            await FluentActions.Invoking(() => handler.Handle(command, new CancellationToken()))
+            await FluentActions.Invoking(() => handler.Handle(command, CancellationToken.None))
                 .Should().ThrowAsync<BusinessException>();
 
-            await unitOfWork.CustomerRepository.DidNotReceive().Create(Arg.Any<Customer>());
+            await repository.DidNotReceive().Create(Arg.Any<Customer>());
         }
     }
 }

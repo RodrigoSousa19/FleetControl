@@ -1,5 +1,6 @@
 ﻿using FleetControl.Application.Commands.Customers.DeleteCustomer;
 using FleetControl.Core.Entities;
+using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
@@ -19,38 +20,38 @@ namespace FleetControl.Tests.Application.Customers
         {
             var customer = _entityGenerator.Generate();
 
+            var repository = Substitute.For<IGenericRepository<Customer>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
 
-            unitOfWork.CustomerRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Customer?)customer));
-            unitOfWork.CustomerRepository.Update(Arg.Any<Customer>()).Returns(Task.CompletedTask);
+            unitOfWork.CustomerRepository.Returns(repository);
+            repository.GetById(Arg.Any<int>()).Returns(customer);
+            repository.Update(Arg.Any<Customer>()).Returns(Task.CompletedTask);
 
             var handler = new DeleteCustomerHandler(unitOfWork);
-
             var command = _generatorsWork.CustomerCommandsGenerator.Commands[CommandType.Delete] as DeleteCustomerCommand;
 
-            var result = await handler.Handle(command, new CancellationToken());
+            var result = await handler.Handle(command, CancellationToken.None);
 
             result.IsSuccess.Should().BeTrue();
-
-            await unitOfWork.CustomerRepository.Received(1).Update(Arg.Any<Customer>());
+            await repository.Received(1).Update(Arg.Any<Customer>());
         }
 
         [Fact]
-        public async Task CustomerNotExists_Delete_Failt()
+        public async Task CustomerNotExists_Delete_Fail()
         {
+            var repository = Substitute.For<IGenericRepository<Customer>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            var mediator = Substitute.For<IMediator>();
 
-            unitOfWork.CustomerRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Customer?)null));
+            unitOfWork.CustomerRepository.Returns(repository);
+            repository.GetById(Arg.Any<int>()).Returns((Customer?)null);
 
             var handler = new DeleteCustomerHandler(unitOfWork);
-
             var command = _generatorsWork.CustomerCommandsGenerator.Commands[CommandType.Delete] as DeleteCustomerCommand;
 
-            var result = await handler.Handle(command, new CancellationToken());
+            var result = await handler.Handle(command, CancellationToken.None);
 
             result.IsSuccess.Should().BeFalse();
         }
+
     }
 }
