@@ -37,7 +37,6 @@
 
   <ItemGroup>
     <Folder Include="Application\Customers\" />
-    <Folder Include="Application\Projects\" />
     <Folder Include="Application\Reservations\ReservationComments\" />
     <Folder Include="Application\Users\" />
     <Folder Include="Application\Vehicles\VehicleMaintenance\" />
