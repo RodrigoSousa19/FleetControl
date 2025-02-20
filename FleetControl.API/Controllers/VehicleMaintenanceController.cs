@@ -35,7 +35,7 @@ namespace FleetControl.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost("/maintenance/create")]
+        [HttpPost]
         public async Task<IActionResult> SendToMaintenance([FromBody] InsertMaintenanceCommand command)
         {
             var result = await _mediator.Send(command);
@@ -46,7 +46,7 @@ namespace FleetControl.API.Controllers
             return Ok(result);
         }
 
-        [HttpPut("/maintenance/{id}/start")]
+        [HttpPut("{id}/start")]
         public async Task<IActionResult> StartVehicleMaintenance(int id)
         {
             var result = await _mediator.Send(new StartMaintenanceCommand(id));
@@ -57,7 +57,7 @@ namespace FleetControl.API.Controllers
             return NoContent();
         }
 
-        [HttpPut("/maintenance/{id}/finish")]
+        [HttpPut("{id}/finish")]
         public async Task<IActionResult> FinishVehicleMaintenance(int id)
         {
             var result = await _mediator.Send(new FinishMaintenanceCommand(id));
@@ -68,7 +68,7 @@ namespace FleetControl.API.Controllers
             return NoContent();
         }
 
-        [HttpPut("/maintenance/{id}/cancel")]
+        [HttpPut("{id}/cancel")]
         public async Task<IActionResult> CancelVehicleMaintenance(int id)
         {
             var result = await _mediator.Send(new CancelMaintenanceCommand(id));
@@ -79,7 +79,7 @@ namespace FleetControl.API.Controllers
             return NoContent();
         }
 
-        [HttpPut("/maintenance/{id}/update")]
+        [HttpPut("{id}/update")]
         public async Task<IActionResult> UpdateVehicleMaintenance(int id, UpdateMaintenanceCommand command)
         {
             var result = await _mediator.Send(command);
@@ -90,7 +90,7 @@ namespace FleetControl.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("/maintenance/{id}/delete")]
+        [HttpDelete("{id}/delete")]
         public async Task<IActionResult> DeleteVehicleMaintenance(int id)
         {
             var result = await _mediator.Send(new CancelMaintenanceCommand(id));
