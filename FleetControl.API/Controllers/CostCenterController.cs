@@ -6,12 +6,14 @@ using FleetControl.Application.Commands.CostCenters.UpdateCostCenter;
 using FleetControl.Application.Queries.CostCenters.GetAll;
 using FleetControl.Application.Queries.CostCenters.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FleetControl.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CostCenterController : ControllerBase
     {
         private readonly IMediator _mediator;

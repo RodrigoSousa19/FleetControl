@@ -6,12 +6,14 @@ using FleetControl.Application.Commands.Projects.UpdateProject;
 using FleetControl.Application.Queries.Projects.GetAll;
 using FleetControl.Application.Queries.Projects.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FleetControl.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProjectsController : ControllerBase
     {
         private readonly IMediator _mediator;

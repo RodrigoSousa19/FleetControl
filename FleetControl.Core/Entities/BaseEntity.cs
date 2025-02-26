@@ -6,6 +6,7 @@
         {
             CreatedAt = DateTime.Now;
             IsDeleted = false;
+            Enabled = true;
         }
 
         public int Id { get; set; }

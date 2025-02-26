@@ -6,8 +6,8 @@ namespace FleetControl.Infrastructure.Persistence.Repositories.Generic
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
-        private readonly FleetControlDbContext _context;
-        private readonly DbSet<T> _dataSet;
+        protected readonly FleetControlDbContext _context;
+        protected readonly DbSet<T> _dataSet;
         private readonly HashSet<string> _includedPaths = new();
         private readonly Dictionary<Type, List<string>> _navigationCache = new();
 

@@ -1,5 +1,6 @@
 ﻿using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace FleetControl.Infrastructure.Persistence.Repositories
@@ -16,7 +17,7 @@ namespace FleetControl.Infrastructure.Persistence.Repositories
                           IGenericRepository<Project> projectRepository,
                           IGenericRepository<Reservation> reservationRepository,
                           IGenericRepository<ReservationComment> reservationCommentRepository,
-                          IGenericRepository<User> userRepository,
+                          IUserRepository userRepository,
                           IGenericRepository<Vehicle> vehicleRepository,
                           IGenericRepository<VehicleMaintenance> vehicleMaintenanceRepository,
                           FleetControlDbContext context)
@@ -48,7 +49,7 @@ namespace FleetControl.Infrastructure.Persistence.Repositories
 
         public IGenericRepository<ReservationComment> ReservationCommentRepository { get; }
 
-        public IGenericRepository<User> UserRepository { get; }
+        public IUserRepository UserRepository { get; }
 
         public IGenericRepository<Vehicle> VehicleRepository { get; }
 

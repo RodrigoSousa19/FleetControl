@@ -2,16 +2,19 @@
 using FleetControl.Application.Commands.Users.DisableUser;
 using FleetControl.Application.Commands.Users.EnableUser;
 using FleetControl.Application.Commands.Users.InsertUser;
+using FleetControl.Application.Commands.Users.Login;
 using FleetControl.Application.Commands.Users.UpdateUser;
 using FleetControl.Application.Queries.Users.GetAll;
 using FleetControl.Application.Queries.Users.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FleetControl.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -45,6 +48,7 @@ namespace FleetControl.API.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] InsertUserCommand command)
         {
             var result = await _mediator.Send(command);
@@ -97,6 +101,18 @@ namespace FleetControl.API.Controllers
                 return BadRequest(result);
 
             return NoContent();
+        }
+
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(LoginCommand request)
+        {
+            var result = await _mediator.Send(request);
+
+            if (!result.IsSuccess)
+                return BadRequest(result);
+
+            return Ok(result);
         }
     }
 }

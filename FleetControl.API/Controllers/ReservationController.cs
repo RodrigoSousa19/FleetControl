@@ -8,12 +8,14 @@ using FleetControl.Application.Commands.Reservations.UpdateReservation;
 using FleetControl.Application.Queries.Reservations.GetAll;
 using FleetControl.Application.Queries.Reservations.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FleetControl.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ReservationController : ControllerBase
     {
         private readonly IMediator _mediator;

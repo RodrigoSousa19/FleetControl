@@ -23,7 +23,7 @@ builder.Services
 
 builder.Services.AddExceptionHandler<ApiExceptionHandler>();
 builder.Services.AddProblemDetails();
-
+builder.Services.AddMemoryCache();
 var app = builder.Build();
 
 

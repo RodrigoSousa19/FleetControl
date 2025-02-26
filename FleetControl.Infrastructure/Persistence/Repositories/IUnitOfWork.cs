@@ -1,5 +1,6 @@
 ﻿using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
+using FleetControl.Infrastructure.Persistence.Repositories.Interfaces;
 
 namespace FleetControl.Infrastructure.Persistence.Repositories
 {
@@ -13,7 +14,7 @@ namespace FleetControl.Infrastructure.Persistence.Repositories
         IGenericRepository<Project> ProjectRepository { get; }
         IGenericRepository<Reservation> ReservationRepository { get; }
         IGenericRepository<ReservationComment> ReservationCommentRepository { get; }
-        IGenericRepository<User> UserRepository { get; }
+        IUserRepository UserRepository { get; }
         IGenericRepository<Vehicle> VehicleRepository { get; }
         IGenericRepository<VehicleMaintenance> VehicleMaintenanceRepository { get; }
 

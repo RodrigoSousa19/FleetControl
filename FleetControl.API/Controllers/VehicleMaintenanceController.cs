@@ -1,12 +1,14 @@
 ﻿using FleetControl.Application.Commands.Vehicles;
 using FleetControl.Application.Queries.Vehicles;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FleetControl.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class VehicleMaintenanceController : ControllerBase
     {
         private readonly IMediator _mediator;

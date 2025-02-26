@@ -7,12 +7,14 @@ using FleetControl.Application.Commands.Drivers.UpdateDriver;
 using FleetControl.Application.Queries.Drivers.GetAll;
 using FleetControl.Application.Queries.Drivers.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FleetControl.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DriverController : ControllerBase
     {
         private readonly IMediator _mediator;

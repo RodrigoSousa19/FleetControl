@@ -6,12 +6,14 @@ using FleetControl.Application.Commands.Vehicles.UpdateVehicle;
 using FleetControl.Application.Queries.Vehicles.GetAll;
 using FleetControl.Application.Queries.Vehicles.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FleetControl.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class VehicleController : ControllerBase
     {
         private readonly IMediator _mediator;

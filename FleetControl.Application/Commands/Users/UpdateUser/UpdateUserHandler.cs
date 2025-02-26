@@ -24,7 +24,7 @@ namespace FleetControl.Application.Commands.Users.UpdateUser
             if (user is null)
                 return ResultViewModel.Error("Não foi possível encontrar o usuário especificado");
 
-            user.Update(request.Name, request.Email);
+            user.Update(request.Name, request.Email, request.Role, request.BirthDate);
 
             await _unitOfWork.UserRepository.Update(user);
 

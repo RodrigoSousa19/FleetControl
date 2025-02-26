@@ -7,12 +7,14 @@ using FleetControl.Application.Commands.Customers.UpdateCustomer;
 using FleetControl.Application.Queries.Customers.GetAll;
 using FleetControl.Application.Queries.Customers.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FleetControl.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CustomerController : ControllerBase
     {
         private readonly IMediator _mediator;
