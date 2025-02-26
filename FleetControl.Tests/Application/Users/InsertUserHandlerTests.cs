@@ -2,9 +2,11 @@
 using FleetControl.Core.Entities;
 using FleetControl.Core.Exceptions;
 using FleetControl.Infrastructure.Persistence.Repositories;
+using FleetControl.Infrastructure.Security;
 using FleetControl.Tests.Helpers;
 using FluentAssertions;
 using MediatR;
+using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 
 namespace FleetControl.Tests.Application.Users
@@ -18,10 +20,12 @@ namespace FleetControl.Tests.Application.Users
         {
             var unitOfWork = Substitute.For<IUnitOfWork>();
             var mediator = Substitute.For<IMediator>();
+            var cache = Substitute.For<IMemoryCache>();
+            var authService = Substitute.For<IAuthService>();
 
             var command = _generatorsWork.UserCommandsGenerator.Commands[CommandType.Insert] as InsertUserCommand;
 
-            var handler = new InsertUserHandler(unitOfWork);
+            var handler = new InsertUserHandler(unitOfWork,authService,cache);
 
             var result = await handler.Handle(command, new CancellationToken());
 
@@ -35,14 +39,19 @@ namespace FleetControl.Tests.Application.Users
         {
             var unitOfWork = Substitute.For<IUnitOfWork>();
             var mediator = Substitute.For<IMediator>();
+            var cache = Substitute.For<IMemoryCache>();
+            var authService = Substitute.For<IAuthService>();
 
             var command = new InsertUserCommand
             {
                 Email = "ab@abc@.com",
-                Name = ""
+                Name = "",
+                Password = "",
+                BirthDate = DateTime.MinValue,
+                Role = ""
             };
 
-            var handler = new InsertUserHandler(unitOfWork);
+            var handler = new InsertUserHandler(unitOfWork, authService, cache);
 
             await FluentActions.Invoking(() => handler.Handle(command, new CancellationToken()))
                 .Should().ThrowAsync<BusinessException>();
