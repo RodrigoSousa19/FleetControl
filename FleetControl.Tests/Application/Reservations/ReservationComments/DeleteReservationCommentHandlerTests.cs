@@ -42,12 +42,10 @@ namespace FleetControl.Tests.Application.Reservations.ReservationComments
         [Fact]
         public async Task ReservationCommentNotExists_Delete_Failt()
         {
-            var repository = Substitute.For<IGenericRepository<ReservationComment>>();
 
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            unitOfWork.ReservationCommentRepository.Returns(repository);
 
-            repository.GetById(Arg.Any<int>()).ReturnsNull();
+            unitOfWork.ReservationCommentRepository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var handler = new DeleteReservationCommentHandler(unitOfWork);
 

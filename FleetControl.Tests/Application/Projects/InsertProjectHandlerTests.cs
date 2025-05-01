@@ -49,9 +49,7 @@ namespace FleetControl.Tests.Application.Projects
         [Fact]
         public async Task InputDataAreNotOk_Insert_ThrowsBusinessException()
         {
-            var repository = Substitute.For<IGenericRepository<Project>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            unitOfWork.ProjectRepository.Returns(repository);
 
             var command = new InsertProjectCommand
             {
@@ -65,7 +63,7 @@ namespace FleetControl.Tests.Application.Projects
             await FluentActions.Invoking(() => handler.Handle(command, new CancellationToken()))
                 .Should().ThrowAsync<BusinessException>();
 
-            await unitOfWork.ProjectRepository.DidNotReceive().Create(Arg.Any<Project>());
+            await unitOfWork.ProjectRepository.DidNotReceive().Create((Project)Arg.Any<Project>());
         }
 
         [Fact]

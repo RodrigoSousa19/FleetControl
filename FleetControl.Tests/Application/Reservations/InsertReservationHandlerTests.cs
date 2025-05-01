@@ -31,14 +31,9 @@ namespace FleetControl.Tests.Application.Reservations
             var driverRepository = Substitute.For<IGenericRepository<Driver>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
 
-            unitOfWork.ReservationRepository.Returns(repository);
-            unitOfWork.ProjectRepository.Returns(projectRepository);
-            unitOfWork.VehicleRepository.Returns(vehicleRepository);
-            unitOfWork.DriverRepository.Returns(driverRepository);
-
-            projectRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
-            driverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)driver));
-            vehicleRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((FleetControl.Core.Entities.Vehicle?)vehicle));
+            unitOfWork.ProjectRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
+            unitOfWork.VehicleRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((FleetControl.Core.Entities.Vehicle?)vehicle));
+            unitOfWork.DriverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)driver));
 
             var command = _generatorsWork.ReservationCommandsGenerator.Commands[CommandType.Insert] as InsertReservationCommand;
 
@@ -48,7 +43,7 @@ namespace FleetControl.Tests.Application.Reservations
 
             result.IsSuccess.Should().BeTrue();
 
-            await repository.Received().Create(Arg.Any<Reservation>());
+            await unitOfWork.ReservationRepository.Received().Create(Arg.Any<Reservation>());
         }
 
         [Fact]

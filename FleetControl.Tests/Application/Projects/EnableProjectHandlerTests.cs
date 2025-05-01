@@ -48,7 +48,7 @@ namespace FleetControl.Tests.Application.Projects
             var unitOfWork = Substitute.For<IUnitOfWork>();
             unitOfWork.ProjectRepository.Returns(repository);
 
-            repository.GetById(Arg.Any<int>()).ReturnsNull();
+            repository.GetById(Arg.Any<int>()).Returns((Project?)null);
 
             var handler = new EnableProjectHandler(unitOfWork);
 

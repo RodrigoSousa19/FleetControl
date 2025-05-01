@@ -11,7 +11,7 @@ namespace FleetControl.Tests.Helpers.Generators
                 f.Random.Int(1, 100),
                 f.Random.Int(1, 100),
                 DateTime.Now,
-                f.Date.Future(2),
+                f.Date.Future(3,DateTime.Now),
                 f.Lorem.Paragraph()
             )))
         { }

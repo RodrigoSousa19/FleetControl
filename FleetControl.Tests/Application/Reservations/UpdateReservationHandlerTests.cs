@@ -21,18 +21,13 @@ namespace FleetControl.Tests.Application.Reservations
         {
             var reservation = _reservationGenerator.Generate();
             var driver = _driverGenerator.Generate();
-
-            var repository = Substitute.For<IGenericRepository<Reservation>>();
-            var driverRepository = Substitute.For<IGenericRepository<Driver>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
 
-            unitOfWork.ReservationRepository.Returns(repository);
-            unitOfWork.DriverRepository.Returns(driverRepository);
+            unitOfWork.ReservationRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
+            unitOfWork.DriverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)driver));
 
-            driverRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Driver?)driver));
-            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Reservation?)reservation));
 
-            repository.Update(Arg.Any<Reservation>()).Returns(Task.CompletedTask);
+            unitOfWork.ReservationRepository.Update(Arg.Any<Reservation>()).Returns(Task.CompletedTask);
 
             var handler = new UpdateReservationHandler(unitOfWork);
 
@@ -42,7 +37,7 @@ namespace FleetControl.Tests.Application.Reservations
 
             result.IsSuccess.Should().BeTrue();
 
-            await repository.Received(1).Update(Arg.Any<Reservation>());
+            await unitOfWork.ReservationRepository.Received(1).Update(Arg.Any<Reservation>());
         }
 
         [Fact]

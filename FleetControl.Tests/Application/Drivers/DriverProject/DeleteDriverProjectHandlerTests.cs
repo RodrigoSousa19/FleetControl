@@ -39,7 +39,7 @@ namespace FleetControl.Tests.Application.Drivers.DriverProject
         }
 
         [Fact]
-        public async Task DriverProjectNotExists_Delete_Failt()
+        public async Task DriverProjectNotExists_Delete_Fail()
         {
             var repository = Substitute.For<IGenericRepository<DriverProjects>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();

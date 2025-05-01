@@ -36,7 +36,6 @@ namespace FleetControl.Tests.Application.CostCenterTests
         {
             var repository = Substitute.For<IGenericRepository<CostCenter>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            unitOfWork.CostCenterRepository.Returns(repository);
 
             var command = new InsertCostCenterCommand
             {
@@ -48,7 +47,7 @@ namespace FleetControl.Tests.Application.CostCenterTests
             await FluentActions.Invoking(() => handler.Handle(command, new CancellationToken()))
                 .Should().ThrowAsync<BusinessException>();
 
-            await repository.DidNotReceive().Create(Arg.Any<CostCenter>());
+            await unitOfWork.CostCenterRepository.DidNotReceive().Create(Arg.Any<CostCenter>());
         }
     }
 }

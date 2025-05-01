@@ -24,10 +24,9 @@ namespace FleetControl.Tests.Application.Projects
 
             var repository = Substitute.For<IGenericRepository<Project>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            unitOfWork.ProjectRepository.Returns(repository);
 
-            repository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
-            repository.Update(Arg.Any<Project>()).Returns(Task.CompletedTask);
+            unitOfWork.ProjectRepository.GetById(Arg.Any<int>()).Returns(Task.FromResult((Project?)project));
+            unitOfWork.ProjectRepository.Update(Arg.Any<Project>()).Returns(Task.CompletedTask);
 
             var handler = new DisableProjectHandler(unitOfWork);
 
@@ -37,7 +36,7 @@ namespace FleetControl.Tests.Application.Projects
 
             result.IsSuccess.Should().BeTrue();
 
-            await repository.Received().Update(Arg.Any<Project>());
+            await unitOfWork.ProjectRepository.Received().Update(Arg.Any<Project>());
         }
 
         [Fact]

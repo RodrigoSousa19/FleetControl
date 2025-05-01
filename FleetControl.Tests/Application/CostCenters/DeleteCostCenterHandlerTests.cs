@@ -41,11 +41,8 @@ namespace FleetControl.Tests.Application.CostCenters
         [Fact]
         public async Task CostCenterNotExists_Delete_Failt()
         {
-            var repository = Substitute.For<IGenericRepository<CostCenter>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            unitOfWork.CostCenterRepository.Returns(repository);
-
-            repository.GetById(Arg.Any<int>()).ReturnsNull();
+            unitOfWork.CostCenterRepository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var handler = new DeleteCostCenterHandler(unitOfWork);
 

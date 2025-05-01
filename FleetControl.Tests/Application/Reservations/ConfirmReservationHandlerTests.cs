@@ -47,11 +47,8 @@ namespace FleetControl.Tests.Application.Reservations
         [Fact]
         public async Task ReservationNotExists_Confirm_Fail()
         {
-            var repository = Substitute.For<IGenericRepository<Reservation>>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
-            unitOfWork.ReservationRepository.Returns(repository);
-
-            repository.GetById(Arg.Any<int>()).ReturnsNull();
+            unitOfWork.ReservationRepository.GetById(Arg.Any<int>()).ReturnsNull();
 
             var handler = new ConfirmReservationHandler(unitOfWork);
 

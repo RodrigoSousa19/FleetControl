@@ -2,6 +2,7 @@
 using FleetControl.Core.Entities;
 using FleetControl.Core.Interfaces.Generic;
 using FleetControl.Infrastructure.Persistence.Repositories;
+using FleetControl.Infrastructure.Persistence.Repositories.Interfaces;
 using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
@@ -23,7 +24,7 @@ namespace FleetControl.Tests.Application.Drivers
             var user = _userGenerator.Generate();
 
             var repository = Substitute.For<IGenericRepository<Driver>>();
-            var userRepository = Substitute.For<IGenericRepository<User>>();
+            var userRepository = Substitute.For<IUserRepository>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
 
             unitOfWork.DriverRepository.Returns(repository);
@@ -48,7 +49,7 @@ namespace FleetControl.Tests.Application.Drivers
         public async Task DriverNotExists_Update_Fail()
         {
             var repository = Substitute.For<IGenericRepository<Driver>>();
-            var userRepository = Substitute.For<IGenericRepository<User>>();
+            var userRepository = Substitute.For<IUserRepository>();
             var unitOfWork = Substitute.For<IUnitOfWork>();
 
             unitOfWork.DriverRepository.Returns(repository);
