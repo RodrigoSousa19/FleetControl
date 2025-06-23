@@ -49,6 +49,7 @@ namespace FleetControl.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles= "PROJECT_COORDINATOR,ADMIN,MANAGER")]
         public async Task<IActionResult> Create([FromBody] InsertReservationCommand command)
         {
             var result = await _mediator.Send(command);

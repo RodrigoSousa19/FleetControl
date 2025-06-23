@@ -10,9 +10,9 @@ namespace FleetControl.Infrastructure.Persistence.Repositories.Implementations
         public UserRepository(FleetControlDbContext context) : base(context)
         { }
 
-        public async Task<User?> GetUserDetailsLogin(string email, string passwordHash)
+        public async Task<User?> GetUserDetailsLogin(string email)
         {
-            return await _dataSet.Where(u => u.Email.Equals(email) && u.Password.Equals(passwordHash)).FirstOrDefaultAsync();
+            return await _dataSet.Where(u => u.Email.Equals(email)).FirstOrDefaultAsync();
         }
     }
 }

@@ -11,7 +11,7 @@
         public bool IsSuccess { get; private set; }
         public string Message { get; private set; }
 
-        public static ResultViewModel Success() => new();
+        public static ResultViewModel Success(string message = "") => new(message: message);
         public static ResultViewModel Error(string message) => new(false, message);
     }
 

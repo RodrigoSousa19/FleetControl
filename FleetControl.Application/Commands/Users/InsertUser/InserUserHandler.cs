@@ -29,13 +29,13 @@ namespace FleetControl.Application.Commands.Users.InsertUser
 
             var hashPassword = _authService.ComputeHash(request.Password);
 
-            var user = new User(request.Name, request.Email, hashPassword, request.Role, request.BirthDate);
+            var user = new User(request.Name, request.Email, hashPassword, request.BirthDate);
 
             var result = await _unitOfWork.UserRepository.Create(user);
 
             await _unitOfWork.SaveChangesAsync();
 
-            return ResultViewModel.Success();
+            return ResultViewModel.Success("Usuário cadastrado!");
         }
     }
 }

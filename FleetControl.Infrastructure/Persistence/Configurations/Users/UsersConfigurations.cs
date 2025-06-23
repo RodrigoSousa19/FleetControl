@@ -12,6 +12,9 @@ namespace FleetControl.Infrastructure.Persistence.Configurations.Users
 
             builder.Property(u => u.Name).HasMaxLength(50).IsRequired();
             builder.Property(u => u.Email).HasMaxLength(100).IsRequired();
+            builder.Property(u => u.Password).IsRequired();
+            builder.Property(u => u.BirthDate).IsRequired();
+            builder.Property(u => u.Role).IsRequired();
         }
     }
 }

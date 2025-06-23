@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FleetControl.Core.Enums.User;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -18,24 +19,34 @@ namespace FleetControl.Infrastructure.Security
 
         public string ComputeHash(string password)
         {
-            using (var hash = SHA256.Create())
-            {
-                var passwordBytes = Encoding.UTF8.GetBytes(password);
+            int iterations = 100000;
+            int saltSize = 16;
+            int keySize = 32; 
 
-                var hashBytes = hash.ComputeHash(passwordBytes);
+            byte[] salt = RandomNumberGenerator.GetBytes(saltSize);
 
-                var builder = new StringBuilder();
+            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256);
+            byte[] hash = pbkdf2.GetBytes(keySize);
 
-                for (var i = 0; i < hashBytes.Length; i++)
-                {
-                    builder.Append(hashBytes[i].ToString("x2"));
-                }
-
-                return builder.ToString();
-            }
+            return $"{iterations}.{Convert.ToBase64String(salt)}.{Convert.ToBase64String(hash)}";
         }
 
-        public string GenerateToken(string email, string role, string name)
+        public bool VerifyPassword(string password, string storedHash)
+        {
+            var parts = storedHash.Split('.');
+            if (parts.Length != 3) return false;
+
+            int iterations = int.Parse(parts[0]);
+            byte[] salt = Convert.FromBase64String(parts[1]);
+            byte[] expectedHash = Convert.FromBase64String(parts[2]);
+
+            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256);
+            byte[] actualHash = pbkdf2.GetBytes(expectedHash.Length);
+
+            return CryptographicOperations.FixedTimeEquals(actualHash, expectedHash);
+        }
+
+        public string GenerateToken(string email, Role role, string name)
         {
             var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
             var audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
@@ -46,7 +57,7 @@ namespace FleetControl.Infrastructure.Security
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Email, email),
-                new Claim(ClaimTypes.Role, role),
+                new Claim(ClaimTypes.Role, Enum.GetName(role)),
                 new Claim(ClaimTypes.Name, name)
             };
 

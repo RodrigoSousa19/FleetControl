@@ -1,5 +1,6 @@
 ﻿using FleetControl.Application.Commands.Users.InsertUser;
 using FleetControl.Core.Entities;
+using FleetControl.Core.Enums.User;
 using FleetControl.Core.Exceptions;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Infrastructure.Security;
@@ -47,8 +48,7 @@ namespace FleetControl.Tests.Application.Users
                 Email = "ab@abc@.com",
                 Name = "",
                 Password = "",
-                BirthDate = DateTime.MinValue,
-                Role = ""
+                BirthDate = DateTime.MinValue
             };
 
             var handler = new InsertUserHandler(unitOfWork, authService, cache);

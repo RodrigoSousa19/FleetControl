@@ -21,12 +21,13 @@ namespace FleetControl.Application.Commands.Users.Login
         {
             new Validator().IsEmailValid(request.Email, ErrorsList.InvalidEmail).Validate();
 
-            var hashPassword = _authService.ComputeHash(request.Password);
-
-            var user = await _unitOfWork.UserRepository.GetUserDetailsLogin(request.Email, hashPassword);
+            var user = await _unitOfWork.UserRepository.GetUserDetailsLogin(request.Email);
 
             if (user is null)
-                return ResultViewModel<string>.Error("Email e/ou senha inválidos, tente novamente.");
+                return ResultViewModel<string>.Error("Email não encontrado, tente novamente.");
+
+            if(!_authService.VerifyPassword(request.Password,user.Password))
+                return ResultViewModel<string>.Error("Senha incorreta, tente novamente.");
 
             var token = _authService.GenerateToken(user.Email, user.Role, user.Name);
 

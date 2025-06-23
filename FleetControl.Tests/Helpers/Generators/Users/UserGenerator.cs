@@ -10,7 +10,6 @@ namespace FleetControl.Tests.Helpers.Generators
                 f.Person.FullName,
                 f.Person.Email,
                 f.Internet.Password(),
-                f.Lorem.Word(),
                 f.Date.Between(DateTime.Now.AddYears(-50),DateTime.Now.AddYears(-18))
             )))
         { }
