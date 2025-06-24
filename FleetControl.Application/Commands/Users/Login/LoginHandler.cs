@@ -26,7 +26,7 @@ namespace FleetControl.Application.Commands.Users.Login
             if (user is null)
                 return ResultViewModel<string>.Error("Email não encontrado, tente novamente.");
 
-            if(!_authService.VerifyPassword(request.Password,user.Password))
+            if (!_authService.VerifyPassword(request.Password, user.Password))
                 return ResultViewModel<string>.Error("Senha incorreta, tente novamente.");
 
             var token = _authService.GenerateToken(user.Email, user.Role, user.Name);

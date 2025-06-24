@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-
-namespace FleetControl.API.Extensions
+﻿namespace FleetControl.API.Extensions
 {
     public static class BuilderExtension
     {

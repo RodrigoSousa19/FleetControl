@@ -21,7 +21,7 @@ namespace FleetControl.Infrastructure.Security
         {
             int iterations = 100000;
             int saltSize = 16;
-            int keySize = 32; 
+            int keySize = 32;
 
             byte[] salt = RandomNumberGenerator.GetBytes(saltSize);
 

@@ -1,6 +1,5 @@
 ﻿using FleetControl.Application.Commands.Users.InsertUser;
 using FleetControl.Core.Entities;
-using FleetControl.Core.Enums.User;
 using FleetControl.Core.Exceptions;
 using FleetControl.Infrastructure.Persistence.Repositories;
 using FleetControl.Infrastructure.Security;
@@ -26,7 +25,7 @@ namespace FleetControl.Tests.Application.Users
 
             var command = _generatorsWork.UserCommandsGenerator.Commands[CommandType.Insert] as InsertUserCommand;
 
-            var handler = new InsertUserHandler(unitOfWork,authService,cache);
+            var handler = new InsertUserHandler(unitOfWork, authService, cache);
 
             var result = await handler.Handle(command, new CancellationToken());
 

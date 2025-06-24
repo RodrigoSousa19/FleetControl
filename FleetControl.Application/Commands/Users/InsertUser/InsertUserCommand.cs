@@ -12,6 +12,6 @@ namespace FleetControl.Application.Commands.Users.InsertUser
         public string Password { get; set; }
 
 
-        public User ToEntity() => new(Name, Email,Password,BirthDate);
+        public User ToEntity() => new(Name, Email, Password, BirthDate);
     }
 }

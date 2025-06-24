@@ -6,7 +6,6 @@ using FleetControl.Tests.Helpers;
 using FleetControl.Tests.Helpers.Generators;
 using FluentAssertions;
 using NSubstitute;
-using NSubstitute.ReturnsExtensions;
 
 namespace FleetControl.Tests.Application.Projects
 {

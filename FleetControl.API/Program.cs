@@ -4,7 +4,6 @@ using FleetControl.API.ExceptionsHandler;
 using FleetControl.API.Extensions;
 using FleetControl.Application;
 using FleetControl.Infrastructure;
-using Microsoft.Extensions.Configuration;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
