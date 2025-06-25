@@ -4,13 +4,12 @@ namespace FleetControl.Application.Models.Drivers
 {
     public class DriverViewModel
     {
-        public DriverViewModel(int id, string fullName, string documentNumber, string documentType, bool enabled, IReadOnlyList<string> projects)
+        public DriverViewModel(int id, string fullName, string documentNumber, string documentType, bool enabled)
         {
             Id = id;
             FullName = fullName;
             DocumentNumber = documentNumber;
             DocumentType = documentType;
-            Projects = projects;
             Enabled = enabled;
         }
 
@@ -23,9 +22,7 @@ namespace FleetControl.Application.Models.Drivers
 
         public static DriverViewModel FromEntity(Driver entity)
         {
-            var driverProjects = entity.DriverProjects.Select(x => x.Project.Name).ToList();
-
-            return new DriverViewModel(entity.Id, entity.User?.Name, entity.DocumentNumber, entity.GetDocumentDescription(), entity.Enabled, driverProjects);
+            return new DriverViewModel(entity.Id, entity.User?.Name, entity.DocumentNumber, entity.GetDocumentDescription(), entity.Enabled);
         }
     }
 }

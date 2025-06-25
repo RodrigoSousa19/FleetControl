@@ -1,7 +1,6 @@
 ﻿using FleetControl.Tests.Helpers.Generators;
 using FleetControl.Tests.Helpers.Generators.Customers.Commands;
 using FleetControl.Tests.Helpers.Generators.Drivers.Commands;
-using FleetControl.Tests.Helpers.Generators.Drivers.DriverProjects.Commands;
 using FleetControl.Tests.Helpers.Generators.Projects.Commands;
 using FleetControl.Tests.Helpers.Generators.Reservations.Commands;
 using FleetControl.Tests.Helpers.Generators.Reservations.ReservationComment.Commands;
@@ -16,7 +15,6 @@ namespace FleetControl.Tests.Helpers
         private CostCenterCommandsGenerator _costCenterCommandsGenerator;
         private CustomerCommandsGenerator _customerCommandsGenerator;
         private DriverCommandsGenerator _driverCommandsGenerator;
-        private DriverProjectsCommandsGenerator _driverProjectsCommandsGenerator;
         private ProjectCommandsGenerator _projectCommandsGenerator;
         private ReservationCommandsGenerator _reservationCommandsGenerator;
         private ReservationCommentCommandsGenerator _reservationCommentCommandsGenerator;
@@ -45,14 +43,6 @@ namespace FleetControl.Tests.Helpers
             get
             {
                 return _driverCommandsGenerator ?? (_driverCommandsGenerator = new DriverCommandsGenerator());
-            }
-        }
-
-        public DriverProjectsCommandsGenerator DriverProjectsCommandsGenerator
-        {
-            get
-            {
-                return _driverProjectsCommandsGenerator ?? (_driverProjectsCommandsGenerator = new DriverProjectsCommandsGenerator());
             }
         }
 

@@ -1,6 +1,5 @@
 ﻿using FleetControl.Application.Commands.Drivers.DeleteDriver;
 using FleetControl.Application.Commands.Drivers.DisableDriver;
-using FleetControl.Application.Commands.Drivers.DriverProject;
 using FleetControl.Application.Commands.Drivers.EnableDriver;
 using FleetControl.Application.Commands.Drivers.InsertDriver;
 using FleetControl.Application.Commands.Drivers.UpdateDriver;
@@ -95,39 +94,6 @@ namespace FleetControl.API.Controllers
         public async Task<IActionResult> Enable(int id)
         {
             var result = await _mediator.Send(new EnableDriverCommand(id));
-
-            if (!result.IsSuccess)
-                return BadRequest(result);
-
-            return NoContent();
-        }
-
-        [HttpPost("set-project")]
-        public async Task<IActionResult> SetProject([FromBody] InsertDriverProjectCommand command)
-        {
-            var result = await _mediator.Send(command);
-
-            if (!result.IsSuccess)
-                return BadRequest(result);
-
-            return Ok(result);
-        }
-
-        [HttpPost("delete-project/{id}")]
-        public async Task<IActionResult> SetProject(int id)
-        {
-            var result = await _mediator.Send(new DeleteDriverProjectCommand(id));
-
-            if (!result.IsSuccess)
-                return BadRequest(result);
-
-            return NoContent();
-        }
-
-        [HttpPut("update-project/{id}")]
-        public async Task<IActionResult> UpdateProject(int id, UpdateDriverProjectCommand command)
-        {
-            var result = await _mediator.Send(command);
 
             if (!result.IsSuccess)
                 return BadRequest(result);

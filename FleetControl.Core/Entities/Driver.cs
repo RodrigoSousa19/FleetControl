@@ -10,15 +10,12 @@ namespace FleetControl.Core.Entities
             DocumentNumber = documentNumber;
             DocumentType = documentType;
 
-            DriverProjects = [];
-
             Enabled = true;
         }
         public int IdUser { get; private set; }
         public User User { get; set; }
         public string DocumentNumber { get; private set; }
         public DocumentType DocumentType { get; private set; }
-        public ICollection<DriverProjects> DriverProjects { get; set; }
 
         public void Update(string documentNumber, DocumentType documentType)
         {
