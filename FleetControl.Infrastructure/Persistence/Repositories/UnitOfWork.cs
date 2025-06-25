@@ -13,7 +13,6 @@ namespace FleetControl.Infrastructure.Persistence.Repositories
         public UnitOfWork(IGenericRepository<CostCenter> costCenterRepository,
                           IGenericRepository<Customer> customerRepository,
                           IGenericRepository<Driver> driverRepository,
-                          IGenericRepository<DriverProjects> driverProjectsRepository,
                           IGenericRepository<Project> projectRepository,
                           IGenericRepository<Reservation> reservationRepository,
                           IGenericRepository<ReservationComment> reservationCommentRepository,
@@ -25,7 +24,6 @@ namespace FleetControl.Infrastructure.Persistence.Repositories
             CostCenterRepository = costCenterRepository;
             CustomerRepository = customerRepository;
             DriverRepository = driverRepository;
-            DriverProjectsRepository = driverProjectsRepository;
             ProjectRepository = projectRepository;
             ReservationRepository = reservationRepository;
             ReservationCommentRepository = reservationCommentRepository;
@@ -40,8 +38,6 @@ namespace FleetControl.Infrastructure.Persistence.Repositories
         public IGenericRepository<Customer> CustomerRepository { get; }
 
         public IGenericRepository<Driver> DriverRepository { get; }
-
-        public IGenericRepository<DriverProjects> DriverProjectsRepository { get; }
 
         public IGenericRepository<Project> ProjectRepository { get; }
 

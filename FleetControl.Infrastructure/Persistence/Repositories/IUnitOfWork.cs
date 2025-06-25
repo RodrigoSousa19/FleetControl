@@ -10,7 +10,6 @@ namespace FleetControl.Infrastructure.Persistence.Repositories
         IGenericRepository<CostCenter> CostCenterRepository { get; }
         IGenericRepository<Customer> CustomerRepository { get; }
         IGenericRepository<Driver> DriverRepository { get; }
-        IGenericRepository<DriverProjects> DriverProjectsRepository { get; }
         IGenericRepository<Project> ProjectRepository { get; }
         IGenericRepository<Reservation> ReservationRepository { get; }
         IGenericRepository<ReservationComment> ReservationCommentRepository { get; }
